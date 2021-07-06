@@ -1,6 +1,6 @@
 #environment setup
 CC=g++
-CFLAGS=-g
+CFLAGS=-g -std=c++17
 
 #build setup
 BUILD_DIR=obj
@@ -9,7 +9,7 @@ INCLUDE_DIRS=-Ilibs/sfml-2.5.1/include
 LIB_DIRS=-Llibs/sfml-2.5.1/lib
 LIBS=-lsfml-graphics -lsfml-window -lsfml-system
 TARGET=amendieres
-SRCS=main.cpp JsonParser.cpp JsonNode.cpp AssetManager.cpp AssetBase.cpp
+SRCS=main.cpp JsonParser.cpp JsonNode.cpp AssetManager.cpp AssetBase.cpp JsonAsset.cpp
 
 #auto-populated vars
 BIN=$(BUILD_DIR)/$(TARGET).exe

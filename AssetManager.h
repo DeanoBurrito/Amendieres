@@ -20,7 +20,7 @@ namespace Amendieres
         void Load(const std::string& path);
         void Unload(const std::string& path);
 
-        void RegisterFactory(const std::string& name, std::function<AssetBase* (uint64_t)>);
+        void RegisterFactory(const std::string& name, std::function<AssetBase* (uint64_t)> func);
 
         AssetHeader* GetHeader(const std::string& path) const;
         AssetBase* Get(const std::string& path); 
@@ -40,6 +40,13 @@ namespace Amendieres
         std::map<uint64_t, AssetBase*> assets;
         std::unique_ptr<JsonNode> configFile;
 
+        std::map<std::string, std::function<AssetBase*(uint64_t)>> factories;
+
+        uint64_t nextRid = 1;
+        std::vector<uint64_t> freedRids;
+
         void LoadAssetEntry(JsonNode* node);
+        uint64_t AllocId();
+        void FreeId(uint64_t id);
     };
 }

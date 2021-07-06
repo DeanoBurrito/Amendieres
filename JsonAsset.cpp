@@ -7,7 +7,7 @@ namespace Amendieres
         return nullptr;
     }
     
-    JsonAsset::JsonAsset(uint64_t rid) : AssetBase(rid)
+    JsonAsset::JsonAsset(uint64_t rid) : AssetBase(rid, static_cast<int32_t>(AssetType::JsonNode))
     {
 
     }
