@@ -1,0 +1,3 @@
+$(BUILD_DIR)/%.o: %.cpp
+	@echo Compiling file $<
+	@$(CC) $(CFLAGS) $(INCLUDE_DIRS) -c $< -o $@

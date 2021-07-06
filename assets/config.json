@@ -1,0 +1,12 @@
+{
+    "window": 
+    {
+        "height": 600,
+        "width": 800,
+        "title": "Amendieres"
+    },
+    "assets":
+    {
+        "loadAll": true
+    }
+}
