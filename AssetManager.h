@@ -17,6 +17,8 @@ namespace Amendieres
 
         void ReadConfig(const std::string& directory);
         void LoadAll();
+        void UnloadAll();
+        void ClearAll();
         void Load(const std::string& path);
         void Unload(const std::string& path);
 

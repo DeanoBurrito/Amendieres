@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cassert>
 #include "AssetManager.h"
 
 namespace Amendieres
@@ -25,6 +26,27 @@ namespace Amendieres
             //create empty asset
             assets[0] = new EmptyAsset();
         }
+    }
+
+    void AssetManager::UnloadAll()
+    {
+        for (auto& header : headers)
+        {
+            if (header.second->loaded)
+                Unload(header.first);
+        }
+        assert(assets.size() == 0);
+    }
+
+    void AssetManager::ClearAll()
+    {
+        UnloadAll();
+        for (auto& asset : headers)
+        {
+            delete asset.second;
+        }
+        headers.clear();
+        assert(freedRids.size() == nextRid - 1);
     }
 
     void AssetManager::Load(const std::string& path)
@@ -138,7 +160,51 @@ namespace Amendieres
 
     void AssetManager::LoadAssetEntry(JsonNode* node)
     {
+        std::string name;
+        std::string fileName;
+        std::string loaderName;
+        bool essentialFilled = true;
+        //lots of dangling ptrs, these are just references inside the tree, and will be cleaned up with the tree itself
+        if (JsonString* nameNode = node->Find<JsonString>("name"))
+            name = nameNode->value;
+        if (JsonString* filenameNode = node->Find<JsonString>("file/name"))
+        {
+            fileName = filenameNode->value;
+            if (name.size() == 0)
+                fileName = fileName;
+        }
+        else
+            essentialFilled = false;
+            
+        if (JsonString* loaderNode = node->Find<JsonString>("loader"))
+            loaderName = loaderNode->value;
+        else
+            essentialFilled = false;
+        
+        //before we allocate, check if name is valid
+        if (headers.find(name) != headers.end())
+        {
+            std::cerr << "Failed loading asset header entry: Header already exists for entry " << name << std::endl;
+            return;
+        }
 
+        
+        //create entry if we have the essentials
+        if (!essentialFilled)
+        {
+            std::cerr << "Failed loading asset header entry: Required details missing from config file. Possibly resource " << fileName << std::endl;
+            return;
+        }
+
+        //optional values
+        AssetHeader* header = new AssetHeader(name, loaderName, fileName);
+        if (JsonNumberInt* fileStart = node->Find<JsonNumberInt>("file/offset"))
+            header->fileOffset = fileStart->value;
+        if (JsonNumberInt* fileLength = node->Find<JsonNumberInt>("file/length"))
+            header->fileLength = fileLength->value;
+        
+        //finally add it to the stash
+        headers[name] = header;
     }
 
     uint64_t AssetManager::AllocId()

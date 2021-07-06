@@ -45,6 +45,7 @@ namespace Amendieres
 
     void Shutdown()
     {
+        AssetManager::The()->ClearAll();
     }
 
     void Update(const sf::Time delta)
