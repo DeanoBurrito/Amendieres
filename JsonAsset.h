@@ -12,11 +12,10 @@ namespace Amendieres
 
         std::unique_ptr<JsonNode> root;
 
-        JsonAsset(uint64_t rid);
-        ~JsonAsset();
-
         bool Create(std::istream& stream) override;
         void Destroy() override;
     private:
+        JsonAsset(uint64_t rid);
+        ~JsonAsset();
     };
 }

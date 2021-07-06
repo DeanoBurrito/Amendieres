@@ -47,7 +47,7 @@ namespace Amendieres
         uint64_t nextRid = 1;
         std::vector<uint64_t> freedRids;
 
-        void LoadAssetEntry(JsonNode* node);
+        void LoadAssetEntry(JsonNode* node, const std::string& assetDir);
         uint64_t AllocId();
         void FreeId(uint64_t id);
     };

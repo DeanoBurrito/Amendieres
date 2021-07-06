@@ -17,6 +17,12 @@ namespace Amendieres
     {
         JsonParser parser;
         configFile = parser.ParseFile(directory + "/assets.json");
+
+        JsonArray* headerArray = configFile->Find<JsonArray>("assets");
+        for (auto entryNode : headerArray->elements)
+        {
+            LoadAssetEntry(entryNode, directory);
+        }
     }
 
     void AssetManager::LoadAll()
@@ -26,6 +32,9 @@ namespace Amendieres
             //create empty asset
             assets[0] = new EmptyAsset();
         }
+
+        for (auto header : headers)
+            Load(header.first);
     }
 
     void AssetManager::UnloadAll()
@@ -42,9 +51,7 @@ namespace Amendieres
     {
         UnloadAll();
         for (auto& asset : headers)
-        {
             delete asset.second;
-        }
         headers.clear();
         assert(freedRids.size() == nextRid - 1);
     }
@@ -158,7 +165,7 @@ namespace Amendieres
     AssetBase* AssetManager::Get(const std::string& path)
     { return nullptr; }
 
-    void AssetManager::LoadAssetEntry(JsonNode* node)
+    void AssetManager::LoadAssetEntry(JsonNode* node, const std::string& assetDir)
     {
         std::string name;
         std::string fileName;
@@ -169,9 +176,9 @@ namespace Amendieres
             name = nameNode->value;
         if (JsonString* filenameNode = node->Find<JsonString>("file/name"))
         {
-            fileName = filenameNode->value;
+            fileName = assetDir + "/" + filenameNode->value;
             if (name.size() == 0)
-                fileName = fileName;
+                name = fileName;
         }
         else
             essentialFilled = false;
@@ -187,7 +194,6 @@ namespace Amendieres
             std::cerr << "Failed loading asset header entry: Header already exists for entry " << name << std::endl;
             return;
         }
-
         
         //create entry if we have the essentials
         if (!essentialFilled)
