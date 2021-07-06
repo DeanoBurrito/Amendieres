@@ -158,6 +158,7 @@ namespace Amendieres
         default:
             outputValid = false;
             std::cerr << "Unexpected token type as value: " << static_cast<int>(next.type) << std::endl;
+            NextToken(); //consume unknown to avoid infinite loops in parsing.
             return new JsonNode();
         }
     }
