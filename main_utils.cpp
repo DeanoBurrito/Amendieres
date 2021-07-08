@@ -1,5 +1,5 @@
 #include "AssetManager.h"
-#include "JsonAsset.h"
+#include "Json/JsonAsset.h"
 
 namespace Amendieres
 {

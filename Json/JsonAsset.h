@@ -1,7 +1,7 @@
 #pragma once
 
 #include "JsonParser.h"
-#include "AssetBase.h"
+#include "../AssetBase.h"
 
 namespace Amendieres
 {

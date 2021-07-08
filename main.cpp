@@ -5,8 +5,8 @@
 #include <cstdint>
 #include <SFML/Graphics.hpp>
 #include "AssetManager.h"
-#include "JsonNode.h"
-#include "JsonParser.h"
+#include "Json/JsonNode.h"
+#include "Json/JsonParser.h"
 
 #include "main_utils.cpp"
 
