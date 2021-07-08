@@ -44,7 +44,7 @@ namespace Amendieres
             if (header.second->loaded)
                 Unload(header.first);
         }
-        assert(assets.size() == 0);
+        assert(assets.size() == 1);
     }
 
     void AssetManager::ClearAll()
