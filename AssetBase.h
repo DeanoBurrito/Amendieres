@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <istream>
 #include <variant>
 #include "AssetTypesBuiltIn.h"
 
@@ -35,7 +34,7 @@ namespace Amendieres
         AssetBase(uint64_t rid, int32_t rType);
         virtual ~AssetBase();
 
-        virtual bool Create(std::istream& stream) = 0;
+        virtual bool Create(char* data, uint64_t dataCount) = 0;
         virtual void Destroy() = 0;
     private:
         const uint64_t id;
@@ -47,7 +46,7 @@ namespace Amendieres
     friend AssetManager;
     private:
         EmptyAsset() : AssetBase(0, static_cast<int32_t>(AssetType::Empty)) {}
-        bool Create(std::istream &stream) override { return true; }
+        bool Create(char* data, uint64_t dataCount) override { return true; }
         void Destroy() override {}
     };
 }

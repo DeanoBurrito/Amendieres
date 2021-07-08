@@ -1,10 +1,11 @@
+#include <sstream>
 #include "JsonAsset.h"
 
 namespace Amendieres
 {
     AssetBase* JsonAsset::Factory(uint64_t id)
     {
-        return nullptr;
+        return new JsonAsset(id);
     }
     
     JsonAsset::JsonAsset(uint64_t rid) : AssetBase(rid, static_cast<int32_t>(AssetType::JsonNode))
@@ -15,11 +16,12 @@ namespace Amendieres
     JsonAsset::~JsonAsset()
     {}
 
-    bool JsonAsset::Create(std::istream& stream)
+    bool JsonAsset::Create(char* data, uint64_t dataCount)
     {   
         JsonParser parser;
-        root = parser.ParseStream(stream);
-        return true;
+        std::stringstream str(data);
+        root = parser.ParseStream(str);
+        return root->type != JsonNodeType::Null;
     }
 
     void JsonAsset::Destroy()

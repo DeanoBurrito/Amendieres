@@ -43,6 +43,11 @@ namespace Amendieres
     {
         Init();
         input = &istream;
+        {        
+            input->seekg(0, std::ios::end);
+            std::cout << "Stream length passed is: " << input->tellg() << std::endl;
+            input->seekg(0, std::ios::beg);
+        }
 
         try
         {
@@ -67,6 +72,12 @@ namespace Amendieres
 
     std::unique_ptr<JsonNode> JsonParser::Fin()
     {
+        if (tokens.back().type != JsonTokenType::EndOfFile)
+        {
+            std::cerr << "Json parser read incorrect data, no EOF has been stored." << std::endl;
+            return std::make_unique<JsonNode>(JsonNode());
+        }
+        
         JsonNode* output = ParseValue();
         MatchToken(JsonTokenType::EndOfFile); //last token should be EOF, otherwise there's data we havent processed yet.
 
@@ -190,16 +201,17 @@ namespace Amendieres
 
     void JsonParser::LexTokens()
     {
-        while (!input->eof())
+        while (true)
         {
             currentChar = input->get();
+            if (input->eof())
+            {
+                tokens.push_back({ JsonTokenType::EndOfFile, "" });
+                break;
+            }
 
             switch (currentChar)
             {
-            case -1:
-                tokens.push_back({ JsonTokenType::EndOfFile, "" });
-                break;
-
             case '/': //This is a comment :D
                 input->ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 continue;
@@ -268,18 +280,18 @@ namespace Amendieres
 
         //peek ahead until the next whitespace, all that cna be left is true/false/null literals
         std::string nextLiteral;
-        std::getline(*input, nextLiteral, ' ');
-        if (nextLiteral.compare("true"))
+        std::getline(*input, nextLiteral, '\n');
+        if (nextLiteral.compare("true") == 0)
         {
             tokens.push_back({ JsonTokenType::True, "true" });
             return;
         }
-        else if (nextLiteral.compare("false"))
+        else if (nextLiteral.compare("false") == 0)
         {
             tokens.push_back({ JsonTokenType::False, "false" });
             return;
         }
-        else if (nextLiteral.compare("null"))
+        else if (nextLiteral.compare("null") == 0)
         {
             tokens.push_back({ JsonTokenType::Null, "null" });
             return;

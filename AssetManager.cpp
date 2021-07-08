@@ -78,7 +78,7 @@ namespace Amendieres
         }
 
         //validate file actually exists, and offset + length arent going to trigger any weirdness
-        std::ifstream inFile(header->second->fileLocation, std::ios::in);
+        std::ifstream inFile(header->second->fileLocation, std::ios::in | std::ios::binary);
         if (!inFile.is_open())
         {
             std::cerr << "Unable to load resource" << path << ", referenced file does not exist: " << header->second->fileLocation << std::endl;
@@ -94,12 +94,23 @@ namespace Amendieres
             inFile.close();
             return;
         }
-        inFile.seekg(header->second->fileOffset); //seek to offset prior to passing stream to Create()
+
+        //create isolated buffer for resource to load from
+        uint64_t actualSize = header->second->fileLength == 0 ? fileLength : header->second->fileLength;
+        /*  Implementation hack note:
+                The extra 0 at the end of the buffer should be ignored by any assets that are reading binary data, 
+                as they'll be using the buffer size we pass in.
+                However, to make it easy to read text files, the trailing 0 allows the entire buffer to passed
+                to a std::stringstream ctor, and is read as the end of string. */
+        char copyBuffer[actualSize + 1]; 
+        copyBuffer[actualSize] = 0; 
+        inFile.seekg(header->second->fileOffset);
+        inFile.read(copyBuffer, actualSize);
+        inFile.close(); 
 
         //create asset with unique id, cache it and create it using file from earlier
         AssetBase* base = factory->second(AllocId());
-        #warning Assets are being passed a LIVE file stream when being loaded. Ideally this is an isolated pre-read copy in memory.
-        if (!base->Create(inFile))
+        if (!base->Create(copyBuffer, actualSize))
         {
             std::cerr << "Unable to load resource, Create() failed. " << path << std::endl;
             
@@ -107,10 +118,9 @@ namespace Amendieres
             FreeId(base->id);
             return;
         }
-        assets[base->id] = base;
 
-        //cleanup and linking header with instance
-        inFile.close();
+        //finally link the header and instance, store instance ptr in vector for later access
+        assets[base->id] = base;
         header->second->loaded = true;
         header->second->loadedId = base->id;
     }

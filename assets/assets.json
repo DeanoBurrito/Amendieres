@@ -1,6 +1,21 @@
 {
     "assets":
     [
-        
+        {
+            "name": "example1",
+            "loader": "JSON",
+            "file":
+            {
+                "name": "real/example.json"
+            }
+        },
+        {
+            "name": "example2",
+            "loader": "JSON",
+            "file":
+            {
+                "name": "real/example.json"
+            }
+        }
     ]
 }
