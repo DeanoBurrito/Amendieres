@@ -43,11 +43,6 @@ namespace Amendieres
     {
         Init();
         input = &istream;
-        {        
-            input->seekg(0, std::ios::end);
-            std::cout << "Stream length passed is: " << input->tellg() << std::endl;
-            input->seekg(0, std::ios::beg);
-        }
 
         try
         {
