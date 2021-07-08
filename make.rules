@@ -1,3 +1,4 @@
 $(BUILD_DIR)/%.o: %.cpp
 	@echo Compiling file $<
+	@powershell '$$dir = Split-Path $@; mkdir $$dir -Force | Out-Null'
 	@$(CC) $(CFLAGS) $(INCLUDE_DIRS) -c $< -o $@
