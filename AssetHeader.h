@@ -12,23 +12,27 @@ namespace Amendieres
     friend AssetManager;
     public:
         const std::string name;
-        bool loaded;
-        std::string loaderFunction;
-
-        std::string fileLocation;
-        uint64_t fileOffset;
-        uint64_t fileLength;
+        const std::string loaderFunction;
+        const std::string fileLocation;
     
-        AssetHeader(const std::string& assetName, const std::string& loaderName, const std::string& filename) : name(assetName)
+        AssetHeader(const std::string& assetName, const std::string& loaderName, const std::string& filename) 
+            : name(assetName), loaderFunction(loaderName), fileLocation(filename)
         {
             loaded = false;
             loadedId = 0;
-            loaderFunction = loaderName;
-            fileLocation = filename;
             fileOffset = 0;
             fileLength = 0;
         }
+
+        bool IsLoaded()
+        {
+            return loaded;
+        }
     private:
         uint64_t loadedId;
+        bool loaded;
+
+        uint64_t fileOffset;
+        uint64_t fileLength;
     };
 }

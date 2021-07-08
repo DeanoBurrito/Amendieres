@@ -171,10 +171,31 @@ namespace Amendieres
     }
 
     AssetHeader* AssetManager::GetHeader(const std::string& path) const
-    { return nullptr; }
+    { 
+        if (headers.find(path) == headers.end())
+            return nullptr;
+
+        return headers.find(path)->second;
+    }
 
     AssetBase* AssetManager::Get(const std::string& path)
-    { return nullptr; }
+    {
+        //get header and check if resource is loaded or not
+        auto header = headers.find(path);
+        if (header == headers.end())
+        {
+            LOG_ERROR("Unable to Get() asset, nothing named: " << path);
+            return nullptr;
+        }
+
+        if (!header->second->loaded)
+            Load(path);
+        
+        if (!header->second->loaded)
+            return nullptr; //Load() failed and will have emitted an error already.
+        
+        return assets[header->second->loadedId];
+    }
 
     void AssetManager::LoadAssetEntry(JsonNode* node, const std::string& assetDir)
     {
