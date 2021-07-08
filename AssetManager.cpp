@@ -1,6 +1,6 @@
-#include <iostream>
 #include <fstream>
 #include <cassert>
+#include "Debug.h"
 #include "AssetManager.h"
 
 namespace Amendieres
@@ -62,7 +62,7 @@ namespace Amendieres
         auto header = headers.find(path);
         if (header == headers.end())
         {
-            std::cerr << "Unable to load resource with path: " << path << std::endl;
+            LOG_ERROR("Unable to load resource with path: " << path);
             return;
         }
 
@@ -73,7 +73,7 @@ namespace Amendieres
         auto factory = factories.find(header->second->loaderFunction);
         if (factory == factories.end())
         {
-            std::cerr << "Unable to load resource, no loader registered for type: " << header->second->loaderFunction << std::endl;
+            LOG_ERROR("Unable to load resource, no loader registered for type: " << header->second->loaderFunction);
             return;
         }
 
@@ -81,7 +81,7 @@ namespace Amendieres
         std::ifstream inFile(header->second->fileLocation, std::ios::in | std::ios::binary);
         if (!inFile.is_open())
         {
-            std::cerr << "Unable to load resource" << path << ", referenced file does not exist: " << header->second->fileLocation << std::endl;
+            LOG_ERROR("Unable to load resource" << path << ", referenced file does not exist: " << header->second->fileLocation)
             //inFile.close(); //this shouldnt do anything, i've left it as a reminder for future me to verify across multiple OS's.
             return;
         }
@@ -90,7 +90,7 @@ namespace Amendieres
         uint64_t fileLength = inFile.tellg();
         if (fileLength < header->second->fileOffset + header->second->fileLength)
         {
-            std::cerr << "Unable to load resource " << path << ", file does not have enough data." << std::endl;
+            LOG_ERROR("Unable to load resource " << path << ", file does not have enough data.");
             inFile.close();
             return;
         }
@@ -112,7 +112,8 @@ namespace Amendieres
         AssetBase* base = factory->second(AllocId());
         if (!base->Create(copyBuffer, actualSize))
         {
-            std::cerr << "Unable to load resource, Create() failed. " << path << std::endl;
+            //std::cerr << "Unable to load resource, Create() failed. " << path << std::endl;
+            LOG_ERROR("Unable to load resource, Create() failed. " << path);
             
             delete base;
             FreeId(base->id);
@@ -131,7 +132,7 @@ namespace Amendieres
         auto header = headers.find(path);
         if (header == headers.end())
         {
-            std::cerr << "Unable to unload resource with path: " << path << std::endl;
+            LOG_ERROR("Unable to unload resource with path: " << path);
             return;
         }
 
@@ -139,9 +140,9 @@ namespace Amendieres
             return;
         
         //getting instance ptr
-        if (assets.find(header->second->loadedId) != assets.end())
+        if (assets.find(header->second->loadedId) == assets.end())
         {
-            std::cerr << "Unable to unload resource " << path << ", could not find resource instance" << std::endl;
+            LOG_ERROR("Unable to unload resource " << path << ", could not find resource instance");
             header->second->loaded = false;
             header->second->loadedId = 0;
             return;
@@ -162,7 +163,7 @@ namespace Amendieres
     {
         if (factories.find(name) != factories.end())
         {
-            std::cout << "Skipping factory " << name << ", a function is already registered to that type." << std::endl;
+            LOG_ERROR("Skipping factory " << name << ", a function is already registered to that type.");
             return;
         }
 
@@ -201,14 +202,14 @@ namespace Amendieres
         //before we allocate, check if name is valid
         if (headers.find(name) != headers.end())
         {
-            std::cerr << "Failed loading asset header entry: Header already exists for entry " << name << std::endl;
+            LOG_ERROR("Failed loading asset header entry: Header already exists for entry " << name);
             return;
         }
         
         //create entry if we have the essentials
         if (!essentialFilled)
         {
-            std::cerr << "Failed loading asset header entry: Required details missing from config file. Possibly resource " << fileName << std::endl;
+            LOG_ERROR("Failed loading asset header entry: Required details missing from config file. Possibly resource " << fileName);
             return;
         }
 

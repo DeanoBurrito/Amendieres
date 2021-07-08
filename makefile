@@ -1,6 +1,6 @@
 #environment setup
 CC=g++
-CFLAGS=-g -std=c++17
+CFLAGS=-g -std=c++17 -DDEBUG_ALL
 
 #build setup
 BUILD_DIR=obj

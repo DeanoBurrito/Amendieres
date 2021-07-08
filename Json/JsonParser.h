@@ -14,7 +14,7 @@ namespace Amendieres
     {
     public:
 
-        std::unique_ptr<JsonNode> ParseFile(const std::string filename);
+        std::unique_ptr<JsonNode> ParseFile(const std::string& filename);
         std::unique_ptr<JsonNode> ParseStream(std::istream& istream);
     private:
         char currentChar;

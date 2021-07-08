@@ -1,14 +1,14 @@
 #include <exception>
-#include <iostream>
 #include <locale>
 #include <limits>
+#include "../Debug.h"
 #include "JsonParser.h"
 
 #define NUMBER_BUFF_STARTING_SIZE 32
 
 namespace Amendieres
 {    
-    std::unique_ptr<JsonNode> JsonParser::ParseFile(const std::string filename)
+    std::unique_ptr<JsonNode> JsonParser::ParseFile(const std::string& filename)
     {
         Init();
         
@@ -17,11 +17,10 @@ namespace Amendieres
         
         if (!inFile.is_open())
         {
-            std::cerr << "JSON parser was unable to open file: " << filename << std::endl;
+            LOG_ERROR("JSON parser was unable to open file: " << filename <<);
             return std::make_unique<JsonNode>(JsonNode());
         }
 
-        //hmm...
         input = &inFile;
 
         try
@@ -30,7 +29,7 @@ namespace Amendieres
         }
         catch (std::exception e)
         {
-            std::cerr << "JSON parser triggered exception: " << e.what() << ". Location: " << input->tellg() << std::endl;
+            LOG_ERROR("JSON parser triggered exception: " << e.what() << ". Location: " << input->tellg());
             inFile.close();
             return std::make_unique<JsonNode>(JsonNode());
         }
@@ -50,7 +49,7 @@ namespace Amendieres
         }
         catch (std::exception e)
         {
-            std::cerr << "JSON parser triggered exception: " << e.what() << ". Location: " << input->tellg() << std::endl;
+            LOG_ERROR("JSON parser triggered exception: " << e.what() << ". Location: " << input->tellg());
             return std::make_unique<JsonNode>(JsonNode());
         }
 
@@ -69,7 +68,7 @@ namespace Amendieres
     {
         if (tokens.back().type != JsonTokenType::EndOfFile)
         {
-            std::cerr << "Json parser read incorrect data, no EOF has been stored." << std::endl;
+           LOG_ERROR("Json parser read incorrect data, no EOF has been stored.");
             return std::make_unique<JsonNode>(JsonNode());
         }
         
@@ -163,7 +162,7 @@ namespace Amendieres
 
         default:
             outputValid = false;
-            std::cerr << "Unexpected token type as value: " << static_cast<int>(next.type) << std::endl;
+            LOG_ERROR("Unexpected token type as value: " << static_cast<int>(next.type));
             NextToken(); //consume unknown to avoid infinite loops in parsing.
             return new JsonNode();
         }
@@ -176,7 +175,7 @@ namespace Amendieres
             return next;
         
         outputValid = false;
-        std::cerr << "Expected json token: " << static_cast<int>(expected) << ", got instead " << static_cast<int>(next.type) << ". Text=" << next.text << std::endl;
+        LOG_ERROR("Expected json token: " << static_cast<int>(expected) << ", got instead " << static_cast<int>(next.type) << ". Text=" << next.text);
         return JsonToken(expected, "<SynthesizedToken>");
     }
 
@@ -292,7 +291,7 @@ namespace Amendieres
             return;
         }
 
-        std::cerr << "Unknown literal token \"" << nextLiteral << "\" @ " << input->tellg() << std::endl;
+        LOG_ERROR("Unknown literal token \"" << nextLiteral << "\" @ " << input->tellg());
     }
 
     void JsonParser::LexStringToken()
