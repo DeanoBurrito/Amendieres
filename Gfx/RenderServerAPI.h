@@ -2,19 +2,16 @@
 
 #include <cstdint>
 #include <string>
+#include "RenderFwd.h"
 
 namespace Amendieres::Gfx
 {
-    class Renderable2D; //base 2d drawable class
-    class Texture2D;
-    class RenderTexture2D;
-    class Text2D;
-    class Colour;
-    class RenderQueueOptions; //includes target to output to, shaders to use
-    
     class RenderServerAPI
     {
     public:
+        static void SetInstance(RenderServerAPI* const inst);
+        static RenderServerAPI* The();
+
         virtual void Init(const std::string& configName) = 0;
         virtual void Shutdown() = 0;
         virtual bool ReloadConfig(const std::string& newConfig = nullptr) = 0;
@@ -24,7 +21,7 @@ namespace Amendieres::Gfx
         virtual Texture2D* Texture2D_Create(const uint64_t width, const uint64_t height) = 0;
         virtual Texture2D* Texture2D_Create(const uint64_t width, const uint64_t height, const uint32_t* const rgba32Data, const uint64_t dataLength) = 0;
         virtual void Texture2D_Destroy(Texture2D* item) = 0;
-        virtual void Texture2D_Resize(const uint64_t newWidth, const uint64_t newHeight) = 0;
+        virtual void Texture2D_Resize(Texture2D* item, const uint64_t newWidth, const uint64_t newHeight) = 0;
         virtual void Texture2D_SetData(Texture2D* item, const uint32_t* const rgba32Data, const uint64_t dataLength) = 0;
         virtual void Texture2D_SetData(Texture2D* item, const Colour& fillColour) = 0;
 
@@ -41,7 +38,7 @@ namespace Amendieres::Gfx
         virtual RenderTexture2D* RenderTexture2D_Create(const uint64_t width, const uint64_t height) = 0;
         virtual RenderTexture2D* RenderTexture2D_Create(const uint64_t width, const uint64_t height, const Colour& defaultColour) = 0;
         virtual void RenderTexture2D_Destroy(RenderTexture2D* item) = 0;
-        virtual void RenderTexture2D_Clear(const Colour& clearColor) = 0;
+        virtual void RenderTexture2D_Clear(RenderTexture2D* item, const Colour& clearColor) = 0;
         virtual void RenderTexture2D_CopyTo(const RenderTexture2D* const source, RenderTexture2D* const dest) = 0;
 
         //Render queue and render commands
