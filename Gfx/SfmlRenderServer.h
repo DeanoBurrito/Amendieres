@@ -1,15 +1,23 @@
 #pragma once
 
+#include <unordered_map>
 #include "RenderServerAPI.h"
+#include "SfmlBoundObj.h"
+
+namespace Amendieres::Windowing
+{
+    class SfmlWindowServer;
+}
 
 namespace Amendieres::Gfx
-{
+{   
     class SfmlRenderServer : public RenderServerAPI
     {
+    friend Amendieres::Windowing::SfmlWindowServer;
     public:
-        void Init(const std::string &configName) override;
+        void Init(const std::string& configName) override;
         void Shutdown() override;
-        bool ReloadConfig(const std::string &newConfig = nullptr) override;
+        bool ReloadConfig(const std::string& newConfig = nullptr) override;
 
         Texture2D* Texture2D_Create() override;
         Texture2D* Texture2D_Create(const uint64_t width, const uint64_t height) override;
@@ -39,5 +47,9 @@ namespace Amendieres::Gfx
     
     protected:
         RenderTexture2D* RenderTexture2D_Create(void* bindingWindow) override;
+
+    private:
+        std::unordered_map<Texture2D*, SfmlBoundObj> textures;
+        std::unordered_map<RenderTexture2D, SfmlBoundObj> renderTextures;
     }; 
 }
