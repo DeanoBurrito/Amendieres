@@ -1,8 +1,14 @@
 #include <exception>
 #include <locale>
 #include <limits>
-#include "../Debug.h"
 #include "JsonParser.h"
+
+#ifndef AMENDIERES_JSON_STANDALONE
+#include "../Debug.h"
+#else
+    #define LOG_ERROR(x)
+    #define LOG(x)
+#endif
 
 #define NUMBER_BUFF_STARTING_SIZE 32
 
