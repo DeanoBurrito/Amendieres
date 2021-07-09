@@ -26,6 +26,8 @@ namespace Amendieres::Windowing
         for (auto& window : windows)
         {
             sf::RenderWindow* sfWindow = static_cast<sf::RenderWindow*>(window.second.sfObj);
+            ExtWindow* localWindow = static_cast<ExtWindow*>(window.second.localObj);
+
             sf::Event ev;
             while (sfWindow->pollEvent(ev))
             {
@@ -38,6 +40,11 @@ namespace Amendieres::Windowing
                 case sf::Event::LostFocus:
                     break;
                 case sf::Event::Resized:
+                    {
+                        sf::Vector2u lastWindowSize = sfWindow->getSize();
+                        localWindow->lastSize.x = static_cast<int64_t>(lastWindowSize.x);
+                        localWindow->lastSize.y = static_cast<int64_t>(lastWindowSize.y);
+                    }
                     break;
                 
                 default:
@@ -94,14 +101,56 @@ namespace Amendieres::Windowing
 
     bool SfmlWindowServer::ExtWindow_Resize(ExtWindow* window, const uint64_t newWidth, const uint64_t newHeight)
     { 
-        return false;
+        auto windowPair = windows.find(window);
+        if (windowPair == windows.end())
+        {
+            LOG_ERROR("Cannot resize SFML window as it does not exist, or is not managed by this server.");
+            return false;
+        }
+
+        if (!window->canResize)
+        {
+            LOG_ERROR("Cannot resize SFML window, resizing disabled by ctor.");
+            return false;
+        }
+
+        sf::RenderWindow* sfWindow = static_cast<sf::RenderWindow*>(windowPair->second.sfObj);
+        sfWindow->setSize(sf::Vector2u(newWidth, newHeight));
+
+        sf::Vector2u actualSize = sfWindow->getSize();
+        window->lastSize = Vector2i(static_cast<int64_t>(actualSize.x), static_cast<int64_t>(actualSize.y));
+        if (actualSize.x != newWidth || actualSize.y != newHeight)
+        {
+            LOG_ERROR("Window resize failed. Attempted resolution " << newWidth << "x" << newHeight << ", actaual is " << actualSize.x << "x" << actualSize.y);
+            return false;
+        }
+
+        return true;
     }
 
     void SfmlWindowServer::ExtWindow_GoFullscreen(ExtWindow* window)
-    {}
+    {
+        sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode(); //TODO: could use getFullscreenModes() and choose from the best there. This could be exposed as a setting in the server
+
+        auto windowPair = windows.find(window);
+        if (windowPair == windows.end())
+        {
+            LOG_ERROR("Cannot go fullscreen in sfml window, this window is not managed by this server.");
+            return;
+        }
+
+        ExtWindow_Resize(window, desktopMode.width, desktopMode.height);
+    }
 
     Vector2i SfmlWindowServer::ExtWindow_GetSize(ExtWindow* window)
     {
-        return Vector2i();
+        auto windowPair = windows.find(window);
+        if (windowPair == windows.end())
+        {
+            LOG_ERROR("Cannot get window size. It does not exist, or is not managed by this server.");
+            return Vector2i();
+        }
+
+        return window->lastSize;
     }
 }

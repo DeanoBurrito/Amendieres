@@ -12,4 +12,21 @@ namespace Amendieres::Windowing
 
         server = api;
     }
+
+    void ExtWindow::Resize(uint64_t width, uint64_t height)
+    {
+        if (server != nullptr)
+            server->ExtWindow_Resize(this, width, height);
+    }
+
+    Vector2i ExtWindow::GetSize()
+    {
+        return lastSize;
+    }
+
+    void ExtWindow::GoFullscreen()
+    {
+        if (server != nullptr)
+            server->ExtWindow_GoFullscreen(this);
+    }
 }

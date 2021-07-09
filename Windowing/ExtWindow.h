@@ -17,6 +17,10 @@ namespace Amendieres::Windowing
     public:
         ExtWindow(WindowServerAPI* api);
 
+        void Resize(uint64_t width, uint64_t height);
+        Vector2i GetSize();
+        void GoFullscreen();
+
     private:
         WindowServerAPI* server;
         bool canResize;

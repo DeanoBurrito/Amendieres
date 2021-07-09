@@ -41,7 +41,7 @@ namespace Amendieres
         AssetManager::The()->LoadAll();
 
         windowServer.Init("Servers/Window.cfg");
-        mainWindow = windowServer.ExtWindow_Create(800, 600, "Hello window server", false);
+        mainWindow = windowServer.ExtWindow_Create(800, 600, "Hello window server", true);
 
         return true;
     }
