@@ -20,11 +20,11 @@ namespace Amendieres::Windowing
         virtual void ProcessEvents() = 0;
 
         //External window stuff
-        virtual ExtWindow* ExtWindow_Create(const uint64_t width, const uint64_t height, const std::string& title, bool canResize) = 0;
-        virtual ExtWindow* ExtWindow_Create(const uint64_t width, const uint64_t height, const std::string& title, bool canResize, void* appSpecific) = 0;
-        virtual void ExtWindow_Destroy(ExtWindow* window) = 0;
-        virtual bool ExtWindow_Resize(ExtWindow* window, const uint64_t newWidth, const uint64_t newHeight) = 0;
-        virtual void ExtWindow_GoFullscreen(ExtWindow* window) = 0;
-        virtual Vector2i ExtWindow_GetSize(ExtWindow* window) = 0;
+        virtual uint64_t ExtWindow_Create(ExtWindow* const inst, const uint64_t width, const uint64_t height, const std::string& title, bool canResize) = 0;
+        virtual uint64_t ExtWindow_Create(ExtWindow* const inst, const uint64_t width, const uint64_t height, const std::string& title, bool canResize, void* appSpecific) = 0;
+        virtual void ExtWindow_Destroy(uint64_t windowId) = 0;
+        virtual bool ExtWindow_Resize(uint64_t windowId, const uint64_t newWidth, const uint64_t newHeight) = 0;
+        virtual void ExtWindow_GoFullscreen(uint64_t windowId) = 0;
+        virtual Vector2i ExtWindow_GetSize(uint64_t windowId) = 0;
     };
 }
