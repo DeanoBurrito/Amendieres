@@ -9,7 +9,7 @@ namespace Amendieres::Windowing
     {
         if (currentInst != nullptr)
         {
-            LOG_ERROR("WindowSever instance is being overwritten by another server, this may have unintended consequences!")
+            LOG_ERROR("WindowSever instance is being overwritten by another server, this may have unintended consequences!");
         }
         currentInst = inst;
     }
