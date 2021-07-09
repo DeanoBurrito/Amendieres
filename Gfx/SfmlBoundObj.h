@@ -3,7 +3,9 @@
 namespace Amendieres::Gfx
 {
     enum class SfmlBoundObjType
-    {};
+    {
+        Window
+    };
 
     class SfmlBoundObj
     {
