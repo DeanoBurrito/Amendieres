@@ -18,7 +18,14 @@ namespace Amendieres
         JsonParser parser;
         configFile = parser.ParseFile(directory + "/assets.json");
 
+        LOG("Loading asset bundle from: " << directory);
         JsonArray* headerArray = configFile->Find<JsonArray>("assets");
+        if (headerArray == nullptr)
+        {
+            LOG_ERROR("Failed to load asset config from: " << directory);
+            return;
+        }
+
         for (auto entryNode : headerArray->elements)
         {
             LoadAssetEntry(entryNode, directory);
@@ -124,6 +131,8 @@ namespace Amendieres
         assets[base->id] = base;
         header->second->loaded = true;
         header->second->loadedId = base->id;
+
+        LOG("Loaded asset: " << header->second->name << ", id=" << header->second->loadedId);
     }
 
     void AssetManager::Unload(const std::string& path)
@@ -157,6 +166,8 @@ namespace Amendieres
         FreeId(base->id);
         base->Destroy();
         delete base;
+
+        LOG("Unloaded asset: " << header->second->name);
     }
 
     void AssetManager::RegisterFactory(const std::string& name, std::function<AssetBase* (uint64_t)> func)
@@ -243,6 +254,8 @@ namespace Amendieres
         
         //finally add it to the stash
         headers[name] = header;
+
+        LOG("Loaded asset header: " << header->name << ", file=" << header->fileLocation);
     }
 
     uint64_t AssetManager::AllocId()
