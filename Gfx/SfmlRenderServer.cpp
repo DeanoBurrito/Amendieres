@@ -1,5 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "../Debug.h"
+#include "Texture2D.h"
+#include "RenderTexture2D.h"
 #include "SfmlRenderServer.h"
 
 namespace Amendieres::Gfx
@@ -16,11 +18,17 @@ namespace Amendieres::Gfx
     }
 
     bool SfmlRenderServer::ReloadConfig(const std::string& newConfig)
-    {}
-
+    { return true; }
 
     Texture2D* SfmlRenderServer::Texture2D_Create()
-    {}
+    {
+        Texture2D* texture = new Texture2D(this);
+        sf::Texture* sfTexture;
+
+        textures.try_emplace(texture, SfmlBoundObj(texture, sfTexture, SfmlBoundObjType::Texture2D));
+
+        return texture;
+    }
 
     Texture2D* SfmlRenderServer::Texture2D_Create(const uint64_t width, const uint64_t height)
     {}

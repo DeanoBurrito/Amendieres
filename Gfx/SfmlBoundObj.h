@@ -4,7 +4,9 @@ namespace Amendieres::Gfx
 {
     enum class SfmlBoundObjType
     {
-        Window
+        Window,
+        Texture2D,
+        RenderTexture2D
     };
 
     class SfmlBoundObj
