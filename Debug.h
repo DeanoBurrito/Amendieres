@@ -7,8 +7,21 @@
 
 #ifdef DEBUG_LOGGING
     #include <iostream>
-    #define LOG_ERROR(x) std::cerr << "[ERROR] " << #x << std::endl;
-    #define LOG(x) std::cout << "[DEBUG] " << #x << std::endl;
+
+    struct DebugEndlineInserter
+    {
+        std::ostream& str;
+        
+        DebugEndlineInserter(std::ostream& stream) : str(stream) {}
+        
+        ~DebugEndlineInserter()
+        {
+            str << std::endl;
+        }
+    };
+
+    #define LOG_ERROR(x) (DebugEndlineInserter(std::cerr), std::cerr << "[ERROR] " << x)
+    #define LOG(x) (DebugEndlineInserter(std::cout), std::cout << "[DEBUG] " << x)
 #else
     #define LOG_ERROR(X)
     #define LOG(x)

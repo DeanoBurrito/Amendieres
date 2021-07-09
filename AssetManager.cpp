@@ -88,7 +88,7 @@ namespace Amendieres
         std::ifstream inFile(header->second->fileLocation, std::ios::in | std::ios::binary);
         if (!inFile.is_open())
         {
-            LOG_ERROR("Unable to load resource" << path << ", referenced file does not exist: " << header->second->fileLocation)
+            LOG_ERROR("Unable to load resource" << path << ", referenced file does not exist: " << header->second->fileLocation);
             //inFile.close(); //this shouldnt do anything, i've left it as a reminder for future me to verify across multiple OS's.
             return;
         }

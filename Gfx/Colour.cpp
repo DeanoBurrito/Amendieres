@@ -1,3 +1,4 @@
+#include "../Debug.h"
 #include "Colour.h"
 
 namespace Amendieres::Gfx
@@ -43,5 +44,8 @@ namespace Amendieres::Gfx
                 return data;
             }
         }
+
+        LOG_ERROR("Colour::GetPacked() reached end of function, this should never happen.");
+        __builtin_unreachable();
     }
 }

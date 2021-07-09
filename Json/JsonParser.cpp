@@ -17,7 +17,7 @@ namespace Amendieres
         
         if (!inFile.is_open())
         {
-            LOG_ERROR("JSON parser was unable to open file: " << filename <<);
+            LOG_ERROR("JSON parser was unable to open file: " << filename);
             return std::make_unique<JsonNode>(JsonNode());
         }
 
