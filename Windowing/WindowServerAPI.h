@@ -17,6 +17,7 @@ namespace Amendieres::Windowing
         virtual void Init(const std::string& configName) = 0;
         virtual void Shutdown() = 0;
         virtual bool ReloadConfig(const std::string& newConfig = nullptr) = 0;
+        virtual void ProcessEvents() = 0;
 
         //External window stuff
         virtual ExtWindow* ExtWindow_Create(const uint64_t width, const uint64_t height, const std::string& title, bool canResize) = 0;

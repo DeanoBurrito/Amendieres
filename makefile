@@ -9,7 +9,7 @@ INCLUDE_DIRS=-Ilibs/sfml-2.5.1/include
 LIB_DIRS=-Llibs/sfml-2.5.1/lib
 LIBS=-lsfml-graphics -lsfml-window -lsfml-system
 TARGET=amendieres
-SRCS=main.cpp Json/JsonParser.cpp Json/JsonNode.cpp AssetManager.cpp AssetBase.cpp Json/JsonAsset.cpp Gfx/RenderServerAPI.cpp Gfx/Colour.cpp Windowing/WindowServerAPI.cpp Windowing/ExtWindow.cpp
+SRCS=main.cpp Json/JsonParser.cpp Json/JsonNode.cpp AssetManager.cpp AssetBase.cpp Json/JsonAsset.cpp Gfx/RenderServerAPI.cpp Gfx/Colour.cpp Windowing/WindowServerAPI.cpp Windowing/ExtWindow.cpp Windowing/SfmlWindowServer.cpp
 
 #auto-populated vars
 BIN=$(BUILD_DIR)/$(TARGET).exe

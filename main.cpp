@@ -1,10 +1,10 @@
-#include <iostream>
 #include <vector>
 #include <string>
 #include <memory>
 #include <cstdint>
 #include <SFML/Graphics.hpp>
 #include "AssetManager.h"
+#include "Windowing/SfmlWindowServer.h"
 #include "Json/JsonNode.h"
 #include "Json/JsonParser.h"
 
@@ -13,9 +13,10 @@
 namespace Amendieres
 {
     bool keepRunning = true;
+    Windowing::SfmlWindowServer windowServer;
+    Windowing::ExtWindow* mainWindow;
 
     sf::Clock loopClock;
-    sf::RenderWindow mainWindow;
     std::unique_ptr<JsonNode> mainConfig;
 
     int32_t updateLowerBound = 8; //default of ~120fps cap
@@ -34,45 +35,32 @@ namespace Amendieres
                 cfgWindowWidth != nullptr ? cfgWindowWidth->value : 800,
                 cfgWindowHeight != nullptr ? cfgWindowHeight->value : 600
             );
-        mainWindow.create(windowVideoMode, "[-] Amendieres [+]", sf::Style::Close);
 
         RegisterAssetFactories();
         AssetManager::The()->ReadConfig(assetsDir);
         AssetManager::The()->LoadAll();
+
+        windowServer.Init("Servers/Window.cfg");
+        mainWindow = windowServer.ExtWindow_Create(800, 600, "Hello window server", false);
 
         return true;
     }
 
     void Shutdown()
     {
+        windowServer.ExtWindow_Destroy(mainWindow);
+        windowServer.Shutdown();
         AssetManager::The()->ClearAll();
     }
 
     void Update(const sf::Time delta)
     {
-        sf::Event ev;
-        while (mainWindow.pollEvent(ev))
-        {
-            switch (ev.type) 
-            {
-            case sf::Event::Closed:
-                keepRunning = false;
-                break;
-            case sf::Event::GainedFocus:
-                break;
-            case sf::Event::LostFocus:
-                break;
-            
-            default:
-                break;
-            }
-        }
+        windowServer.ProcessEvents();
     }
 
-    void Render(sf::RenderWindow& window)
+    void Render()
     {
-        window.clear(sf::Color(0x000000FF));
-        window.display();
+        
     }
 
     void MainLoop()
@@ -84,11 +72,9 @@ namespace Amendieres
             {
                 sf::Time delta = loopClock.restart();
                 Update(delta);
-                Render(mainWindow);
+                Render();
             }
         }
-
-        mainWindow.close();
     }
 }
 

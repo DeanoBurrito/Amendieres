@@ -21,6 +21,32 @@ namespace Amendieres::Windowing
     bool SfmlWindowServer::ReloadConfig(const std::string& newConfig)
     { return true; }
 
+    void SfmlWindowServer::ProcessEvents()
+    {
+        for (auto& window : windows)
+        {
+            sf::RenderWindow* sfWindow = static_cast<sf::RenderWindow*>(window.second.sfObj);
+            sf::Event ev;
+            while (sfWindow->pollEvent(ev))
+            {
+                switch (ev.type)
+                {
+                case sf::Event::Closed:
+                    break;
+                case sf::Event::GainedFocus:
+                    break;
+                case sf::Event::LostFocus:
+                    break;
+                case sf::Event::Resized:
+                    break;
+                
+                default:
+                    break;
+                }
+            }
+        }
+    }
+
     ExtWindow* SfmlWindowServer::ExtWindow_Create(const uint64_t width, const uint64_t height, const std::string& title, bool canResize)
     {
         sf::Uint32 windowStyle = sf::Style::Titlebar | sf::Style::Close;
@@ -73,4 +99,9 @@ namespace Amendieres::Windowing
 
     void SfmlWindowServer::ExtWindow_GoFullscreen(ExtWindow* window)
     {}
+
+    Vector2i SfmlWindowServer::ExtWindow_GetSize(ExtWindow* window)
+    {
+        return Vector2i();
+    }
 }
