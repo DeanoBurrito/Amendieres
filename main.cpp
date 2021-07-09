@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include "AssetManager.h"
 #include "Windowing/SfmlWindowServer.h"
+#include "Gfx/SfmlRenderServer.h"
 #include "Json/JsonNode.h"
 #include "Json/JsonParser.h"
 
@@ -15,6 +16,7 @@ namespace Amendieres
     bool keepRunning = true;
     Windowing::SfmlWindowServer windowServer;
     Windowing::ExtWindow* mainWindow;
+    Gfx::SfmlRenderServer renderServer;
 
     sf::Clock loopClock;
     std::unique_ptr<JsonNode> mainConfig;
@@ -40,16 +42,21 @@ namespace Amendieres
         AssetManager::The()->ReadConfig(assetsDir);
         AssetManager::The()->LoadAll();
 
-        windowServer.Init("Servers/Window.cfg");
+        windowServer.Init("Servers/SfmlWindow.cfg");
         mainWindow = windowServer.ExtWindow_Create(800, 600, "Hello window server", true);
+
+        renderServer.Init("Servers/SfmlRender.cfg");
 
         return true;
     }
 
     void Shutdown()
     {
+        renderServer.Shutdown();
+        
         windowServer.ExtWindow_Destroy(mainWindow);
         windowServer.Shutdown();
+        
         AssetManager::The()->ClearAll();
     }
 
