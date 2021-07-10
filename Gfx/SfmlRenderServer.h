@@ -19,37 +19,37 @@ namespace Amendieres::Gfx
         void Shutdown() override;
         bool ReloadConfig(const std::string& newConfig = nullptr) override;
 
-        Texture2D* Texture2D_Create() override;
-        Texture2D* Texture2D_Create(const uint64_t width, const uint64_t height) override;
-        Texture2D* Texture2D_Create(const uint64_t width, const uint64_t height, const uint32_t* const rgba32Data, const uint64_t dataLength) override;
-        void Texture2D_Destroy(Texture2D* item) override;
-        void Texture2D_Resize(Texture2D* item, const uint64_t newWidth, const uint64_t newHeight) override;
-        void Texture2D_SetData(Texture2D* item, const uint32_t* const rgba32Data, const uint64_t dataLength) override;
-        void Texture2D_SetData(Texture2D* item, const Colour& fillColour) override;
+        uint64_t Texture2D_Create() override;
+        uint64_t Texture2D_Create(const uint64_t width, const uint64_t height) override;
+        uint64_t Texture2D_Create(const uint64_t width, const uint64_t height, const uint32_t* const rgba32Data, const uint64_t dataLength) override;
+        void Texture2D_Destroy(const uint64_t itemId) override;
+        void Texture2D_Resize(const uint64_t itemId, const uint64_t newWidth, const uint64_t newHeight) override;
+        void Texture2D_SetData(const uint64_t itemId, const uint32_t* const rgba32Data, const uint64_t dataLength) override;
+        void Texture2D_SetData(const uint64_t itemId, const Colour& fillColour) override;
 
-        Text2D* Text2D_Create() override;
-        Text2D* Text2D_Create(const std::string& text) override;
-        Text2D* Text2D_Create(const std::string& text, const float fontSize) override;
-        void Text2D_Destroy(Text2D* item) override;
-        void Text2D_SetText(Text2D* item, const std::string& newText) override;
-        void Text2D_SetFontSize(Text2D* item, const float newSize) override;
-        void Text2D_SetColor(Text2D* item, const Colour& newColor) override;
+        uint64_t Text2D_Create() override;
+        uint64_t Text2D_Create(const std::string& text) override;
+        uint64_t Text2D_Create(const std::string& text, const float fontSize) override;
+        void Text2D_Destroy(const uint64_t itemId) override;
+        void Text2D_SetText(const uint64_t itemId, const std::string& newText) override;
+        void Text2D_SetFontSize(uint64_t, const float newSize) override;
+        void Text2D_SetColor(uint64_t, const Colour& newColor) override;
 
-        RenderTexture2D* RenderTexture2D_Create(const uint64_t width, const uint64_t height) override;
-        RenderTexture2D* RenderTexture2D_Create(const uint64_t width, const uint64_t height, const Colour& defaultColour) override;
-        void RenderTexture2D_Destroy(RenderTexture2D* item) override;
-        void RenderTexture2D_Clear(RenderTexture2D* item, const Colour& clearColor) override;
-        void RenderTexture2D_CopyTo(const RenderTexture2D* const source, RenderTexture2D* const dest) override;
+        uint64_t RenderTexture2D_Create(const uint64_t width, const uint64_t height) override;
+        uint64_t RenderTexture2D_Create(const uint64_t width, const uint64_t height, const Colour& defaultColour) override;
+        void RenderTexture2D_Destroy(const uint64_t itemId) override;
+        void RenderTexture2D_Clear(const uint64_t itemId, const Colour& clearColor) override;
+        void RenderTexture2D_CopyTo(const uint64_t sourceId, const uint64_t destId) override;
 
         void StartRenderQueue(const RenderQueueOptions& options) override;
         void EndRenderQueue() override;
         void Render(const Renderable2D& renderable) override;
     
     protected:
-        RenderTexture2D* RenderTexture2D_Create(void* bindingWindow) override;
+        uint64_t RenderTexture2D_Create(void* bindingWindow) override;
 
     private:
         std::unordered_map<Texture2D*, SfmlBoundObj> textures;
-        std::unordered_map<RenderTexture2D, SfmlBoundObj> renderTextures;
+        std::unordered_map<RenderTexture2D*, SfmlBoundObj> renderTextures;
     }; 
 }
