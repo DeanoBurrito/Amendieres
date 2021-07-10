@@ -8,7 +8,7 @@ namespace Amendieres
     class IdManager
     {
     public:
-        IdManager<backingType>()
+        IdManager()
         {
             nextId = 1; //0 generally reserved for null use.
         }
@@ -17,7 +17,9 @@ namespace Amendieres
         {
             if (freeIds.empty())
                 return nextId++;
-            return freeIds.pop();
+            backingType val = freeIds.top();
+            freeIds.pop();
+            return val;
         }
 
         void FreeId(backingType id)

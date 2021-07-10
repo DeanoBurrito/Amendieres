@@ -94,6 +94,7 @@ namespace Amendieres::Windowing
 
         //TODO: notify render server of window destruction
 
+        LOG("Window destroyed.");
         idManager.FreeId(windowId);
         sfWindow->close();
         delete sfWindow;

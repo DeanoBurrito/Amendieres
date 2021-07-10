@@ -2,8 +2,9 @@
 #include <string>
 #include <memory>
 #include <cstdint>
-#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include "AssetManager.h"
+#include "Windowing/ExtWindow.h"
 #include "Windowing/SfmlWindowServer.h"
 #include "Gfx/SfmlRenderServer.h"
 #include "Json/JsonNode.h"
@@ -32,18 +33,13 @@ namespace Amendieres
         
         JsonNumberInt* cfgWindowWidth = mainConfig->Find<JsonNumberInt>("window/width");
         JsonNumberInt* cfgWindowHeight = mainConfig->Find<JsonNumberInt>("window/height");
-        sf::VideoMode windowVideoMode
-            (
-                cfgWindowWidth != nullptr ? cfgWindowWidth->value : 800,
-                cfgWindowHeight != nullptr ? cfgWindowHeight->value : 600
-            );
 
         RegisterAssetFactories();
         AssetManager::The()->ReadConfig(assetsDir);
         AssetManager::The()->LoadAll();
 
         windowServer.Init("Servers/SfmlWindow.cfg");
-        mainWindow = windowServer.ExtWindow_Create(800, 600, "Hello window server", true);
+        mainWindow = new Windowing::ExtWindow(cfgWindowWidth->value, cfgWindowHeight->value, "Amendieres", false);
 
         renderServer.Init("Servers/SfmlRender.cfg");
 
@@ -54,7 +50,7 @@ namespace Amendieres
     {
         renderServer.Shutdown();
         
-        windowServer.ExtWindow_Destroy(mainWindow);
+        delete mainWindow;
         windowServer.Shutdown();
         
         AssetManager::The()->ClearAll();
