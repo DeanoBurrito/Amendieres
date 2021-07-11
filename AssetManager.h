@@ -7,6 +7,7 @@
 #include "Json/JsonParser.h"
 #include "AssetBase.h"
 #include "AssetHeader.h"
+#include "IdManager.h"
 
 namespace Amendieres
 {
@@ -38,17 +39,13 @@ namespace Amendieres
             return nullptr;
         }
     private:
+        IdManager<uint64_t> idManager;
         std::map<std::string, AssetHeader*> headers;
         std::map<uint64_t, AssetBase*> assets;
         std::unique_ptr<JsonNode> configFile;
 
         std::map<std::string, std::function<AssetBase*(uint64_t)>> factories;
 
-        uint64_t nextRid = 1;
-        std::vector<uint64_t> freedRids;
-
         void LoadAssetEntry(JsonNode* node, const std::string& assetDir);
-        uint64_t AllocId();
-        void FreeId(uint64_t id);
     };
 }

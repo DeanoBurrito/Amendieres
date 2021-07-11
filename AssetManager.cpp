@@ -60,7 +60,6 @@ namespace Amendieres
         for (auto& asset : headers)
             delete asset.second;
         headers.clear();
-        assert(freedRids.size() == nextRid - 1);
     }
 
     void AssetManager::Load(const std::string& path)
@@ -116,14 +115,14 @@ namespace Amendieres
         inFile.close(); 
 
         //create asset with unique id, cache it and create it using file from earlier
-        AssetBase* base = factory->second(AllocId());
+        AssetBase* base = factory->second(idManager.AllocId());
         if (!base->Create(copyBuffer, actualSize))
         {
             //std::cerr << "Unable to load resource, Create() failed. " << path << std::endl;
             LOG_ERROR("Unable to load resource, Create() failed. " << path);
             
             delete base;
-            FreeId(base->id);
+            idManager.FreeId(base->id);
             return;
         }
 
@@ -163,7 +162,7 @@ namespace Amendieres
         header->second->loadedId = 0;
 
         assets.erase(base->id);
-        FreeId(base->id);
+        idManager.FreeId(base->id);
         base->Destroy();
         delete base;
 
@@ -256,28 +255,5 @@ namespace Amendieres
         headers[name] = header;
 
         LOG("Loaded asset header: " << header->name << ", file=" << header->fileLocation);
-    }
-
-    uint64_t AssetManager::AllocId()
-    {
-        uint64_t retId;
-        
-        if (freedRids.size() == 0)
-            retId = nextRid++;
-        else 
-        {
-            retId = freedRids.back();
-            freedRids.pop_back();
-        }
-
-        return retId;
-    }
-
-    void AssetManager::FreeId(uint64_t id)
-    {
-        if (id == nextRid - 1)
-            nextRid--;
-        else
-            freedRids.push_back(id);
     }
 }
