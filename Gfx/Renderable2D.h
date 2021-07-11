@@ -14,6 +14,8 @@ namespace Amendieres::Gfx
         float rotation;
         Colour tint;
 
+        virtual ~Renderable2D();
+
         virtual void RenderTo(RenderTexture2D* const target, RenderQueueOptions& options) {}
     };
 }
