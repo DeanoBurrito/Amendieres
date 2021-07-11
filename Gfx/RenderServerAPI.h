@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <string>
 #include "RenderFwd.h"
+#include "../Windowing/ExtWindow.h"
 
 namespace Amendieres::Gfx
 {
@@ -17,9 +18,8 @@ namespace Amendieres::Gfx
         virtual bool ReloadConfig(const std::string& newConfig = nullptr) = 0;
 
         //Texture2D stuff
-        virtual uint64_t Texture2D_Create() = 0;
-        virtual uint64_t Texture2D_Create(const uint64_t width, const uint64_t height) = 0;
-        virtual uint64_t Texture2D_Create(const uint64_t width, const uint64_t height, const uint32_t* const rgba32Data, const uint64_t dataLength) = 0;
+        virtual uint64_t Texture2D_Create(Texture2D* const inst, const uint64_t width, const uint64_t height) = 0;
+        virtual uint64_t Texture2D_Create(Texture2D* const inst, const uint64_t width, const uint64_t height, const uint32_t* const rgba32Data, const uint64_t dataLength) = 0;
         virtual void Texture2D_Destroy(const uint64_t itemId) = 0;
         virtual void Texture2D_Resize(const uint64_t itemid, const uint64_t newWidth, const uint64_t newHeight) = 0;
         virtual void Texture2D_SetData(const uint64_t itemId, const uint32_t* const rgba32Data, const uint64_t dataLength) = 0;
@@ -35,8 +35,8 @@ namespace Amendieres::Gfx
         virtual void Text2D_SetColor(const uint64_t itemId, const Colour& newColor) = 0;
 
         //RenderTexture2D stuff
-        virtual uint64_t RenderTexture2D_Create(const uint64_t width, const uint64_t height) = 0;
-        virtual uint64_t RenderTexture2D_Create(const uint64_t width, const uint64_t height, const Colour& defaultColour) = 0;
+        virtual uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, const uint64_t width, const uint64_t height) = 0;
+        virtual uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, const uint64_t width, const uint64_t height, const Colour& defaultColour) = 0;
         virtual void RenderTexture2D_Destroy(const uint64_t itemId) = 0;
         virtual void RenderTexture2D_Clear(const uint64_t itemId, const Colour& clearColor) = 0;
         virtual void RenderTexture2D_CopyTo(const uint64_t sourceId, uint64_t destId) = 0;
@@ -47,6 +47,6 @@ namespace Amendieres::Gfx
         virtual void Render(const Renderable2D& renderable) = 0;
 
     protected:
-        virtual uint64_t RenderTexture2D_Create(void* bindingWindow) = 0;
+        virtual uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, Windowing::ExtWindow* bindingWindow) = 0;
     };
 }

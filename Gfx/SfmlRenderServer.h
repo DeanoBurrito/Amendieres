@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include "RenderServerAPI.h"
 #include "SfmlBoundObj.h"
+#include "../IdManager.h"
 
 namespace Amendieres::Windowing
 {
@@ -19,9 +20,8 @@ namespace Amendieres::Gfx
         void Shutdown() override;
         bool ReloadConfig(const std::string& newConfig = nullptr) override;
 
-        uint64_t Texture2D_Create() override;
-        uint64_t Texture2D_Create(const uint64_t width, const uint64_t height) override;
-        uint64_t Texture2D_Create(const uint64_t width, const uint64_t height, const uint32_t* const rgba32Data, const uint64_t dataLength) override;
+        uint64_t Texture2D_Create(Texture2D* const inst, const uint64_t width, const uint64_t height) override;
+        uint64_t Texture2D_Create(Texture2D* const inst, const uint64_t width, const uint64_t height, const uint32_t* const rgba32Data, const uint64_t dataLength) override;
         void Texture2D_Destroy(const uint64_t itemId) override;
         void Texture2D_Resize(const uint64_t itemId, const uint64_t newWidth, const uint64_t newHeight) override;
         void Texture2D_SetData(const uint64_t itemId, const uint32_t* const rgba32Data, const uint64_t dataLength) override;
@@ -35,8 +35,8 @@ namespace Amendieres::Gfx
         void Text2D_SetFontSize(uint64_t, const float newSize) override;
         void Text2D_SetColor(uint64_t, const Colour& newColor) override;
 
-        uint64_t RenderTexture2D_Create(const uint64_t width, const uint64_t height) override;
-        uint64_t RenderTexture2D_Create(const uint64_t width, const uint64_t height, const Colour& defaultColour) override;
+        uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, const uint64_t width, const uint64_t height) override;
+        uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, const uint64_t width, const uint64_t height, const Colour& defaultColour) override;
         void RenderTexture2D_Destroy(const uint64_t itemId) override;
         void RenderTexture2D_Clear(const uint64_t itemId, const Colour& clearColor) override;
         void RenderTexture2D_CopyTo(const uint64_t sourceId, const uint64_t destId) override;
@@ -46,10 +46,11 @@ namespace Amendieres::Gfx
         void Render(const Renderable2D& renderable) override;
     
     protected:
-        uint64_t RenderTexture2D_Create(void* bindingWindow) override;
+        uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, Windowing::ExtWindow* bindingWindow) override;
 
     private:
-        std::unordered_map<Texture2D*, SfmlBoundObj> textures;
-        std::unordered_map<RenderTexture2D*, SfmlBoundObj> renderTextures;
+        std::unordered_map<uint64_t, SfmlBoundObj> textures;
+        std::unordered_map<uint64_t, SfmlBoundObj> renderTextures;
+        IdManager<uint64_t> idManager;
     }; 
 }
