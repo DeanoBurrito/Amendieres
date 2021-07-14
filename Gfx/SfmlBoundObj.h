@@ -6,7 +6,8 @@ namespace Amendieres::Gfx
     {
         Window,
         Texture2D,
-        RenderTexture2D
+        RenderTexture2D,
+        RenderTexture2D_Window,
     };
 
     class SfmlBoundObj

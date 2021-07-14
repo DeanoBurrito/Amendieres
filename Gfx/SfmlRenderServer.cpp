@@ -98,13 +98,80 @@ namespace Amendieres::Gfx
 
 
     uint64_t SfmlRenderServer::RenderTexture2D_Create(RenderTexture2D* const inst, const uint64_t width, const uint64_t height)
-    { return 0; }
+    { 
+        sf::RenderTexture* sfRenderTexture = new sf::RenderTexture();
+        if (!sfRenderTexture->create(width, height))
+        {
+            LOG_ERROR("Unable to create RenderTexture2D, SFML failed to initialize rendertarget.");
+            return 0;
+        }
+
+        uint64_t localId = idManager.AllocId();
+        renderTextures.try_emplace(localId, SfmlBoundObj(inst, sfRenderTexture, SfmlBoundObjType::RenderTexture2D));
+
+        return localId;
+    }
 
     uint64_t SfmlRenderServer::RenderTexture2D_Create(RenderTexture2D* const inst, const uint64_t width, const uint64_t height, const Colour& defaultColour)
-    { return 0; }
+    { 
+        uint64_t localId = RenderTexture2D_Create(inst, width, height);
+        if (localId == 0)
+            return localId;
+
+        sf::RenderTexture* sfRenderTexture = static_cast<sf::RenderTexture*>(renderTextures.find(localId)->second.sfObj);
+        const uint32_t packedColour = defaultColour.GetPacked(ColourPackingOrder::RGBA);
+        sfRenderTexture->clear(sf::Color(packedColour));
+
+        return localId;
+    }
+
+    uint64_t SfmlRenderServer::RenderTexture2D_Create(RenderTexture2D* const inst, Windowing::ExtWindow* bindingWindow)
+    { 
+        if (Windowing::WindowServerAPI::The()->GetImplName().compare("SfmlWindowServer") == 0)
+        {
+            //SFML window server implementation
+            void* implHandle = Windowing::WindowServerAPI::The()->GetImplSpecificHandle(bindingWindow);
+            if (implHandle == nullptr)
+            {
+                LOG_ERROR("Something has gone horribly wrong: Cannot create RenderTexture2D from ExtWindow, window server returned nullptr as a handle!");
+                return 0;
+            }
+
+            sf::RenderWindow* sfWindow = static_cast<sf::RenderWindow*>(implHandle);
+            uint64_t localId = idManager.AllocId();
+            renderTextures.try_emplace(localId, SfmlBoundObj(inst, sfWindow, SfmlBoundObjType::RenderTexture2D_Window));
+
+            return localId;
+        }
+        else
+        {
+            LOG_ERROR("Unknown window server implementation, cannot bind window to rendertexture!");
+            return 0;
+        }
+    }
 
     void SfmlRenderServer::RenderTexture2D_Destroy(const uint64_t itemId)
-    {}
+    {
+        auto boundObj = renderTextures.find(itemId);
+        if (boundObj == renderTextures.end())
+        {
+            LOG_ERROR("Unable to destroy RenderTexture2D, id does not exist for this server.");
+            return;
+        }
+
+        if (boundObj->second.type == SfmlBoundObjType::RenderTexture2D)
+        {
+            sf::RenderTexture* sfRenderTexture = static_cast<sf::RenderTexture*>(boundObj->second.sfObj);
+            delete sfRenderTexture;
+        }
+        /*
+            Ignoring sf::RenderWindow pointer here, this is not a resource leak. The window server is responsible for any window pointers,
+            and thus freeing it here would likely result in multiple attempts to free it.
+        */
+
+        renderTextures.erase(itemId);
+        idManager.FreeId(itemId);
+    }
 
     void SfmlRenderServer::RenderTexture2D_Clear(const uint64_t itemId, const Colour& clearColor)
     {}
@@ -121,8 +188,4 @@ namespace Amendieres::Gfx
 
     void SfmlRenderServer::Render(const Renderable2D& renderable)
     {}
-
-
-    uint64_t SfmlRenderServer::RenderTexture2D_Create(RenderTexture2D* const inst, Windowing::ExtWindow* bindingWindow)
-    { return 0; }
 }

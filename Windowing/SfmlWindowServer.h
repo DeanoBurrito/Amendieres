@@ -6,21 +6,18 @@
 #include "WindowServerAPI.h"
 #include "../IdManager.h"
 
-namespace Amendieres::Gfx
-{
-    class SfmlRenderServer;
-}
-
 namespace Amendieres::Windowing
 {
     class SfmlWindowServer : public WindowServerAPI
     {
-    friend Amendieres::Gfx::SfmlRenderServer;
     public:
         void Init(const std::string& configName) override;
         void Shutdown() override;
         bool ReloadConfig(const std::string& newConfig = nullptr) override;
         void ProcessEvents() override;
+
+        std::string GetImplName() override;
+        void* GetImplSpecificHandle(const ExtWindow* const window) override;
 
         uint64_t ExtWindow_Create(ExtWindow* inst, const uint64_t width, const uint64_t height, const std::string& title, bool canResize) override;
         uint64_t ExtWindow_Create(ExtWindow* inst, const uint64_t width, const uint64_t height, const std::string& title, bool canResize, void* appSpecific) override;
@@ -28,6 +25,7 @@ namespace Amendieres::Windowing
         bool ExtWindow_Resize(uint64_t windowId, const uint64_t newWidth, const uint64_t newHeight) override;
         void ExtWindow_GoFullscreen(uint64_t windowId) override;
         Vector2i ExtWindow_GetSize(uint64_t windowId) override;
+        Gfx::RenderTexture2D* ExtWindow_GetRenderTexture(uint64_t windowId) override;
     
     private:
         std::unordered_map<uint64_t, Gfx::SfmlBoundObj> windows;

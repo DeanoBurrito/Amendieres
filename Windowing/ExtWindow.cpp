@@ -33,4 +33,11 @@ namespace Amendieres::Windowing
         if (server != nullptr)
             server->ExtWindow_GoFullscreen(windowId);
     }
+
+    Gfx::RenderTexture2D* ExtWindow::GetRenderTexture()
+    {
+        if (server != nullptr)
+            return server->ExtWindow_GetRenderTexture(windowId);
+        return nullptr;
+    }
 }

@@ -7,6 +7,7 @@
 #include "Windowing/ExtWindow.h"
 #include "Windowing/SfmlWindowServer.h"
 #include "Gfx/SfmlRenderServer.h"
+#include "Gfx/RenderTexture2D.h"
 #include "Json/JsonNode.h"
 #include "Json/JsonParser.h"
 
@@ -18,6 +19,7 @@ namespace Amendieres
     Windowing::SfmlWindowServer windowServer;
     Windowing::ExtWindow* mainWindow;
     Gfx::SfmlRenderServer renderServer;
+    Gfx::RenderTexture2D* mainRenderTexture;
 
     sf::Clock loopClock;
     std::unique_ptr<JsonNode> mainConfig;
@@ -42,6 +44,7 @@ namespace Amendieres
         mainWindow = new Windowing::ExtWindow(cfgWindowWidth->value, cfgWindowHeight->value, "Amendieres", false);
 
         renderServer.Init("Servers/SfmlRender.cfg");
+        mainRenderTexture = mainWindow->GetRenderTexture();
 
         return true;
     }

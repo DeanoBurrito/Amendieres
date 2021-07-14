@@ -1,7 +1,7 @@
-#include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "../Debug.h"
+#include "../Gfx/RenderTexture2D.h"
 #include "ExtWindow.h"
 #include "SfmlWindowServer.h"
 
@@ -54,6 +54,23 @@ namespace Amendieres::Windowing
         }
     }
 
+    std::string SfmlWindowServer::GetImplName()
+    {
+        return "SfmlWindowServer";
+    }
+
+    void* SfmlWindowServer::GetImplSpecificHandle(const ExtWindow* const window)
+    {
+        if (window == nullptr)
+            return nullptr;
+
+        auto boundObj = windows.find(window->windowId);
+        if (boundObj == windows.end())
+            return nullptr;
+        
+        return boundObj->second.sfObj;
+    }
+
     uint64_t SfmlWindowServer::ExtWindow_Create(ExtWindow* inst, const uint64_t width, const uint64_t height, const std::string& title, bool canResize)
     {
         sf::Uint32 windowStyle = sf::Style::Titlebar | sf::Style::Close;
@@ -89,10 +106,12 @@ namespace Amendieres::Windowing
         }
 
         //get pointers and remove window from map
+        ExtWindow* localWindow = static_cast<ExtWindow*>(windowPair->second.localObj);
+        if (localWindow->renderTexture != nullptr)
+            delete localWindow->renderTexture;
+        
         sf::RenderWindow* sfWindow = static_cast<sf::RenderWindow*>(windowPair->second.sfObj);
         windows.erase(windowId);
-
-        //TODO: notify render server of window destruction
 
         LOG("Window destroyed.");
         idManager.FreeId(windowId);
@@ -118,6 +137,7 @@ namespace Amendieres::Windowing
 
         sf::RenderWindow* sfWindow = static_cast<sf::RenderWindow*>(windowPair->second.sfObj);
         sfWindow->setSize(sf::Vector2u(newWidth, newHeight));
+        //TODO: resize bound rendertexture
 
         sf::Vector2u actualSize = sfWindow->getSize();
         localWindow->lastSize = Vector2i(static_cast<int64_t>(actualSize.x), static_cast<int64_t>(actualSize.y));
@@ -155,5 +175,24 @@ namespace Amendieres::Windowing
 
         ExtWindow* localWindow = static_cast<ExtWindow*>(windowPair->second.localObj);
         return localWindow->lastSize;
+    }
+
+    Gfx::RenderTexture2D* SfmlWindowServer::ExtWindow_GetRenderTexture(uint64_t windowId)
+    {
+        auto boundObj = windows.find(windowId);
+        if (boundObj == windows.end())
+        {
+            LOG_ERROR("Cannot get render handle for window. Window does not exist on this server.");
+            return nullptr;
+        }
+
+        ExtWindow* localWindow = static_cast<ExtWindow*>(boundObj->second.localObj);
+        if (localWindow->renderTexture != nullptr)
+            return localWindow->renderTexture; //return cached texture, we've already bound this window
+
+        Gfx::RenderTexture2D* boundTexture = new Gfx::RenderTexture2D(Gfx::RenderServerAPI::The(), localWindow);
+        localWindow->renderTexture = boundTexture;
+        
+        return boundTexture;
     }
 }

@@ -4,6 +4,7 @@
 #include <string>
 #include "../Vectors.h"
 #include "WindowServerAPI.h"
+#include "../Gfx/RenderFwd.h"
 
 namespace Amendieres::Windowing
 {
@@ -24,6 +25,7 @@ namespace Amendieres::Windowing
         void Resize(uint64_t width, uint64_t height);
         Vector2i GetSize();
         void GoFullscreen();
+        Gfx::RenderTexture2D* GetRenderTexture(); 
 
     private:
         WindowServerAPI* server;
@@ -31,5 +33,6 @@ namespace Amendieres::Windowing
 
         bool canResize;
         Vector2i lastSize;
+        Gfx::RenderTexture2D* renderTexture = nullptr;
     };
 }

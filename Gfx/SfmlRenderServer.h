@@ -5,16 +5,10 @@
 #include "SfmlBoundObj.h"
 #include "../IdManager.h"
 
-namespace Amendieres::Windowing
-{
-    class SfmlWindowServer;
-}
-
 namespace Amendieres::Gfx
 {   
     class SfmlRenderServer : public RenderServerAPI
     {
-    friend Amendieres::Windowing::SfmlWindowServer;
     public:
         void Init(const std::string& configName) override;
         void Shutdown() override;
@@ -37,6 +31,7 @@ namespace Amendieres::Gfx
 
         uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, const uint64_t width, const uint64_t height) override;
         uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, const uint64_t width, const uint64_t height, const Colour& defaultColour) override;
+        uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, Windowing::ExtWindow* bindingWindow) override;
         void RenderTexture2D_Destroy(const uint64_t itemId) override;
         void RenderTexture2D_Clear(const uint64_t itemId, const Colour& clearColor) override;
         void RenderTexture2D_CopyTo(const uint64_t sourceId, const uint64_t destId) override;
@@ -44,13 +39,12 @@ namespace Amendieres::Gfx
         void StartRenderQueue(const RenderQueueOptions& options) override;
         void EndRenderQueue() override;
         void Render(const Renderable2D& renderable) override;
-    
-    protected:
-        uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, Windowing::ExtWindow* bindingWindow) override;
-
+        
     private:
         std::unordered_map<uint64_t, SfmlBoundObj> textures;
         std::unordered_map<uint64_t, SfmlBoundObj> renderTextures;
+        std::unordered_map<uint64_t, SfmlBoundObj> dynamicFonts;
+        
         IdManager<uint64_t> idManager;
     }; 
 }

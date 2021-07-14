@@ -3,6 +3,7 @@
 #include <string>
 #include <cstdint>
 #include "../Vectors.h"
+#include "../Gfx/RenderFwd.h"
 
 namespace Amendieres::Windowing
 {
@@ -19,6 +20,9 @@ namespace Amendieres::Windowing
         virtual bool ReloadConfig(const std::string& newConfig = nullptr) = 0;
         virtual void ProcessEvents() = 0;
 
+        virtual std::string GetImplName() = 0;
+        virtual void* GetImplSpecificHandle(const ExtWindow* const window) = 0;
+
         //External window stuff
         virtual uint64_t ExtWindow_Create(ExtWindow* const inst, const uint64_t width, const uint64_t height, const std::string& title, bool canResize) = 0;
         virtual uint64_t ExtWindow_Create(ExtWindow* const inst, const uint64_t width, const uint64_t height, const std::string& title, bool canResize, void* appSpecific) = 0;
@@ -26,5 +30,6 @@ namespace Amendieres::Windowing
         virtual bool ExtWindow_Resize(uint64_t windowId, const uint64_t newWidth, const uint64_t newHeight) = 0;
         virtual void ExtWindow_GoFullscreen(uint64_t windowId) = 0;
         virtual Vector2i ExtWindow_GetSize(uint64_t windowId) = 0;
+        virtual Gfx::RenderTexture2D* ExtWindow_GetRenderTexture(uint64_t windowId) = 0;
     };
 }

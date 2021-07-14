@@ -37,6 +37,7 @@ namespace Amendieres::Gfx
         //RenderTexture2D stuff
         virtual uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, const uint64_t width, const uint64_t height) = 0;
         virtual uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, const uint64_t width, const uint64_t height, const Colour& defaultColour) = 0;
+        virtual uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, Windowing::ExtWindow* bindingWindow) = 0;
         virtual void RenderTexture2D_Destroy(const uint64_t itemId) = 0;
         virtual void RenderTexture2D_Clear(const uint64_t itemId, const Colour& clearColor) = 0;
         virtual void RenderTexture2D_CopyTo(const uint64_t sourceId, uint64_t destId) = 0;
@@ -45,8 +46,5 @@ namespace Amendieres::Gfx
         virtual void StartRenderQueue(const RenderQueueOptions& options) = 0;
         virtual void EndRenderQueue() = 0;
         virtual void Render(const Renderable2D& renderable) = 0;
-
-    protected:
-        virtual uint64_t RenderTexture2D_Create(RenderTexture2D* const inst, Windowing::ExtWindow* bindingWindow) = 0;
     };
 }
