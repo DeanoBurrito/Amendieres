@@ -17,5 +17,6 @@ namespace Amendieres
         Unknown = -2,
 
         JsonNode = std::numeric_limits<int32_t>::min(),
+        PngTexture,
     };
 }

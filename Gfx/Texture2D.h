@@ -19,6 +19,7 @@ namespace Amendieres::Gfx
         void Resize(const uint64_t width, const uint64_t height);
         void SetData(const uint32_t* const rgba32Data, const uint64_t dataLength);
         void SetData(const Colour& fillColour);
+        bool IsValid() override;
 
     private:
         RenderServerAPI* server;

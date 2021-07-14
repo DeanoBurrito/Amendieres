@@ -42,4 +42,9 @@ namespace Amendieres::Gfx
         if (server)
             server->Texture2D_SetData(id, fillColour);
     }
+
+    bool Texture2D::IsValid()
+    {
+        return id > 0;
+    }
 }

@@ -38,7 +38,6 @@ namespace Amendieres
 
         RegisterAssetFactories();
         AssetManager::The()->ReadConfig(assetsDir);
-        AssetManager::The()->LoadAll();
 
         windowServer.Init("Servers/SfmlWindow.cfg");
         mainWindow = new Windowing::ExtWindow(cfgWindowWidth->value, cfgWindowHeight->value, "Amendieres", false);
@@ -46,6 +45,7 @@ namespace Amendieres
         renderServer.Init("Servers/SfmlRender.cfg");
         mainRenderTexture = mainWindow->GetRenderTexture();
 
+        AssetManager::The()->LoadAll(); //LoadAll() might require servers to be running for generating textures/sfx.
         return true;
     }
 

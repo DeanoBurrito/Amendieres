@@ -46,7 +46,7 @@ namespace Amendieres::Gfx
         const uint8_t* sfmlFriendlyPtr = static_cast<const uint8_t*>((const void*)rgba32Data);
         sfTexture->update(sfmlFriendlyPtr); //sfml just assumes the data length matches.
 
-        return 0;
+        return setId;
     }
 
     void SfmlRenderServer::Texture2D_Destroy(const uint64_t itemId)

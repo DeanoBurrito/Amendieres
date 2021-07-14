@@ -47,4 +47,9 @@ namespace Amendieres::Gfx
 
         server->RenderTexture2D_CopyTo(id, destination->id);
     }
+    
+    bool RenderTexture2D::IsValid()
+    {
+        return id > 0;
+    }
 }

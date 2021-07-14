@@ -16,6 +16,7 @@ namespace Amendieres::Gfx
 
         virtual ~Renderable2D() {};
 
+        virtual bool IsValid() = 0;
         virtual void RenderTo(RenderTexture2D* const target, RenderQueueOptions& options) {}
     };
 }

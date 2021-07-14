@@ -5,7 +5,7 @@ CFLAGS=-g -std=c++17 -DDEBUG_ALL
 #build setup
 BUILD_DIR=obj
 ASSETS_DIR=assets
-INCLUDE_DIRS=-Ilibs/sfml-2.5.1/include
+INCLUDE_DIRS=-Ilibs/sfml-2.5.1/include -Ilibs/stb_image-2.27
 LIB_DIRS=-Llibs/sfml-2.5.1/lib
 LIBS=-lsfml-graphics -lsfml-window -lsfml-system
 TARGET=amendieres

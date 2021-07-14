@@ -16,6 +16,14 @@
             {
                 "name": "real/example.json"
             }
+        },
+        {
+            "name": "placeholder",
+            "loader": "PNG",
+            "file":
+            {
+                "name": "engine/placeholder64x64.png"
+            }
         }
     ]
 }

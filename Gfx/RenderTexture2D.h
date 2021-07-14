@@ -19,6 +19,7 @@ namespace Amendieres::Gfx
         ~RenderTexture2D();
         void Clear(const Colour& colour);
         void CopyTo(RenderTexture2D* const destination);
+        bool IsValid() override;
 
     private:
         RenderServerAPI* server;
