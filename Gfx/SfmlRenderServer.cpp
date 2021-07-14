@@ -69,10 +69,33 @@ namespace Amendieres::Gfx
     {}
 
     void SfmlRenderServer::Texture2D_SetData(const uint64_t itemId, const uint32_t* const rgba32Data, const uint64_t dataLength)
-    {}
+    {
+        auto boundObj = textures.find(itemId);
+        if (boundObj == textures.end())
+        {
+            LOG_ERROR("Unable to set Texture2D data, not owned by this render server. Id=" << itemId);
+            return;
+        }
+
+        sf::Texture* sfTex = static_cast<sf::Texture*>(boundObj->second.sfObj);
+        const uint8_t* sfmlFriendlyPtr = static_cast<const uint8_t*>((const void*)rgba32Data);
+        sfTex->update(sfmlFriendlyPtr);
+    }
 
     void SfmlRenderServer::Texture2D_SetData(const uint64_t itemId, const Colour& fillColour)
-    {}
+    {
+        auto boundObj = textures.find(itemId);
+        if (boundObj == textures.end())
+        {
+            LOG_ERROR("Unable to set Texture2D data, not owned by this render server. Id=" << itemId);
+            return;
+        }
+
+        sf::Texture* sfTex = static_cast<sf::Texture*>(boundObj->second.sfObj);
+        sf::Image image;
+        image.create(sfTex->getSize().x, sfTex->getSize().y, sf::Color(fillColour.GetPacked()));
+        sfTex->update(image);
+    }
 
 
     uint64_t SfmlRenderServer::Text2D_Create()
