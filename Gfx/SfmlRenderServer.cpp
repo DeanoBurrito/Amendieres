@@ -81,7 +81,7 @@ namespace Amendieres::Gfx
     uint64_t SfmlRenderServer::Text2D_Create(const std::string& text)
     { return 0; }
 
-    uint64_t SfmlRenderServer::Text2D_Create(const std::string& text, const float fontSize)
+    uint64_t SfmlRenderServer::Text2D_Create(const std::string& text, const uint8_t fontSize)
     { return 0; }
 
     void SfmlRenderServer::Text2D_Destroy(const uint64_t itemId)

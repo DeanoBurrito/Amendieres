@@ -1,1 +1,1 @@
-SRCS += Gfx/Colour.cpp Gfx/RenderServerAPI.cpp Gfx/SfmlRenderServer.cpp Gfx/Texture2D.cpp Gfx/Text2D.cpp Gfx/RenderTexture2D.cpp
+SRCS += Gfx/Colour.cpp Gfx/RenderServerAPI.cpp Gfx/SfmlRenderServer.cpp Gfx/Texture2D.cpp Gfx/Text2D.cpp Gfx/RenderTexture2D.cpp Gfx/DynamicFont.cpp

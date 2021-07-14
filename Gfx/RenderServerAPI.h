@@ -28,7 +28,7 @@ namespace Amendieres::Gfx
         //Text2D stuff
         virtual uint64_t Text2D_Create() = 0;
         virtual uint64_t Text2D_Create(const std::string& text) = 0;
-        virtual uint64_t Text2D_Create(const std::string& text, const float fontSize) = 0;
+        virtual uint64_t Text2D_Create(const std::string& text, const uint8_t fontSize) = 0;
         virtual void Text2D_Destroy(const uint64_t itemId) = 0;
         virtual void Text2D_SetText(const uint64_t itemId, const std::string& newText) = 0;
         virtual void Text2D_SetFontSize(const uint64_t itemId, const float newSize) = 0;

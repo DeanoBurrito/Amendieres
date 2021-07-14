@@ -29,7 +29,7 @@ namespace Amendieres::Gfx
 
         uint64_t Text2D_Create() override;
         uint64_t Text2D_Create(const std::string& text) override;
-        uint64_t Text2D_Create(const std::string& text, const float fontSize) override;
+        uint64_t Text2D_Create(const std::string& text, const uint8_t fontSize) override;
         void Text2D_Destroy(const uint64_t itemId) override;
         void Text2D_SetText(const uint64_t itemId, const std::string& newText) override;
         void Text2D_SetFontSize(uint64_t, const float newSize) override;
