@@ -5,11 +5,7 @@ namespace Amendieres::Windowing
 {   
     ExtWindow::ExtWindow(WindowServerAPI* api, const uint64_t w, const uint64_t h, const std::string& title, bool resize)
     {
-        if (api == nullptr)
-        {
-            LOG_ERROR("ExtWindow was created with empty api pointer!");
-            return;
-        }
+        DEBUG_RETURN_IF(api == nullptr, "ExtWindow was created with api set as nullptr!");
 
         server = api;
         windowId = server->ExtWindow_Create(this, w, h, title, resize);

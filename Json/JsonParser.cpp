@@ -74,7 +74,7 @@ namespace Amendieres
     {
         if (tokens.back().type != JsonTokenType::EndOfFile)
         {
-           LOG_ERROR("Json parser read incorrect data, no EOF has been stored.");
+            LOG_ERROR("Json parser read incorrect data, no EOF has been stored.");
             return std::make_unique<JsonNode>(JsonNode());
         }
         

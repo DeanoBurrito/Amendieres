@@ -6,10 +6,16 @@
 #include "WindowServerAPI.h"
 #include "../IdManager.h"
 
+namespace Amendieres::Gfx
+{
+    class SfmlRenderServer;
+}
+
 namespace Amendieres::Windowing
 {
     class SfmlWindowServer : public WindowServerAPI
     {
+    friend Amendieres::Gfx::SfmlRenderServer;
     public:
         void Init(const std::string& configName) override;
         void Shutdown() override;

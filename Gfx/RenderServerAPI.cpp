@@ -7,19 +7,15 @@ namespace Amendieres::Gfx
     
     void RenderServerAPI::SetInstance(RenderServerAPI* const inst)
     {
-        if (currentInst != nullptr)
-        {
-            LOG_ERROR("RenderServerAPI instance is being overwritten, this is unplanned for. Do so at your own risk.");
-        }
+        LOG_ERROR_IF(currentInst != nullptr, "RenderServerAPI instance is being overwritten, this is unplanned for. Do so at your own risk.");
+
         currentInst = inst;
     }
 
     RenderServerAPI* RenderServerAPI::The()
     {
-        if (currentInst == nullptr)
-        {
-            LOG_ERROR("Get() on RenderServerAPI instance nullptr!");
-        }
+        LOG_ERROR_IF(currentInst == nullptr, "Get() on RenderServerAPI instance nullptr!");
+
         return currentInst;
     }
 }

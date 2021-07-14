@@ -7,20 +7,16 @@ namespace Amendieres::Windowing
 
     void WindowServerAPI::SetInstance(WindowServerAPI *const inst)
     {
-        if (currentInst != nullptr)
-        {
-            LOG_ERROR("WindowSever instance is being overwritten by another server, this may have unintended consequences!");
-        }
+        LOG_ERROR_IF(currentInst != nullptr, "WindowSever instance is being overwritten by another server, this may have unintended consequences!");
+
         currentInst = inst;
     }
 
 
     WindowServerAPI* WindowServerAPI::The()
     {
-        if (currentInst == nullptr)
-        {
-            LOG_ERROR("Get() on WindowServerAPI instance is currently nullptr!");
-        }
+        LOG_ERROR_IF(currentInst == nullptr, "Get() on WindowServerAPI instance is currently nullptr!");
+
         return currentInst;
     }
 }

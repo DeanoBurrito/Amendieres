@@ -5,19 +5,17 @@ namespace Amendieres::Gfx
 {
     Texture2D::Texture2D(RenderServerAPI* const api, const uint64_t w, const uint64_t h)
     {
-        if (api == nullptr)
-            LOG_ERROR("Attempting to create Texture2D with null RenderServer ptr.");
-        server = api;
+        DEBUG_RETURN_IF(api == nullptr, "Attemping to create Texture2D will renderserver as nullptr.");
 
+        server = api;
         id = server->Texture2D_Create(this, w, h);
     }
 
     Texture2D::Texture2D(RenderServerAPI* const api, const uint64_t w, const uint64_t h, const uint32_t* const rgba32Data, const uint64_t dataLength)
     {
-        if (api == nullptr)
-            LOG_ERROR("Attempting to create Texture2D with null RenderServer ptr.");
-        server = api;
+        DEBUG_RETURN_IF(api == nullptr, "Attemping to create Texture2D will renderserver as nullptr.");
 
+        server = api;
         id = server->Texture2D_Create(this, w, h, rgba32Data, dataLength);
     }
 

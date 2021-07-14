@@ -22,6 +22,7 @@
     };
 
     #define LOG_ERROR(x) (DebugEndlineInserter(std::cerr), std::cerr << "[ERROR] " << x)
+    #define LOG_ERROR_IF(condition, msg) if (condition) { LOG_ERROR(msg); }
     #define LOG(x) (DebugEndlineInserter(std::cout), std::cout << "[DEBUG] " << x)
     #define LOG_WHERE __FILE__ << ", func=" << __FUNCTION__ << ", line=" << __LINE__
 #else
