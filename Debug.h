@@ -3,6 +3,7 @@
 #ifdef DEBUG_ALL
     //enable all degging aids
     #define DEBUG_LOGGING
+    #define DEBUG_RETURNS
 #endif
 
 #ifdef DEBUG_LOGGING
@@ -25,4 +26,12 @@
 #else
     #define LOG_ERROR(X)
     #define LOG(x)
+#endif
+
+#ifdef DEBUG_RETURNS
+    #define DEBUG_RETURN_IF(check, msg) if (check) { LOG_ERROR(msg); return; }
+    #define DEBUG_RETURN_VAL_IF(check, msg, val) if (check) { LOG_ERROR(msg); return val; }
+#else
+    #define DEBUG_RETURN_IF(check, msg)
+    #define DEBUG_RETURN_VAL_IF(check, msg, val)
 #endif
