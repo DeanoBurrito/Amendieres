@@ -41,6 +41,10 @@ namespace Amendieres
 
         windowServer.Init("Servers/SfmlWindow.cfg");
         mainWindow = new Windowing::ExtWindow(cfgWindowWidth->value, cfgWindowHeight->value, "Amendieres", false);
+        mainWindow->onClosed.Subscribe([] 
+        {
+            keepRunning = false;
+        });
 
         renderServer.Init("Servers/SfmlRender.cfg");
         mainRenderTexture = mainWindow->GetRenderTexture();
@@ -51,12 +55,12 @@ namespace Amendieres
 
     void Shutdown()
     {
-        renderServer.Shutdown();
-        
-        delete mainWindow;
-        windowServer.Shutdown();
-        
         AssetManager::The()->ClearAll();
+
+        delete mainWindow;
+        
+        renderServer.Shutdown();
+        windowServer.Shutdown();
     }
 
     void Update(const sf::Time delta)

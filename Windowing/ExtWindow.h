@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <string>
+#include "../Event.h"
 #include "../Vectors.h"
 #include "WindowServerAPI.h"
 #include "../Gfx/RenderFwd.h"
@@ -17,6 +18,11 @@ namespace Amendieres::Windowing
     //friend GlfwWindowServer;
 
     public:
+        Event<> onClosed;
+        Event<> onFocusGained;
+        Event<> onFocusLost;
+        Event<const uint64_t, const uint64_t> onResized;
+
         ExtWindow() = delete;
         ExtWindow(const uint64_t w, const uint64_t h, const std::string& title, bool canResize) : ExtWindow(WindowServerAPI::The(), w, h, title, canResize) {}
         ExtWindow(WindowServerAPI* api, const uint64_t w, const uint64_t h, const std::string& title, bool canResize);

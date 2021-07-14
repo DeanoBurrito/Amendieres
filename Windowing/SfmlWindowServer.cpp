@@ -34,16 +34,21 @@ namespace Amendieres::Windowing
                 switch (ev.type)
                 {
                 case sf::Event::Closed:
+                    localWindow->onClosed.Fire();
                     break;
                 case sf::Event::GainedFocus:
+                    localWindow->onFocusGained.Fire();
                     break;
                 case sf::Event::LostFocus:
+                    localWindow->onFocusLost.Fire();
                     break;
                 case sf::Event::Resized:
                     {
                         sf::Vector2u lastWindowSize = sfWindow->getSize();
                         localWindow->lastSize.x = static_cast<int64_t>(lastWindowSize.x);
                         localWindow->lastSize.y = static_cast<int64_t>(lastWindowSize.y);
+                        
+                        localWindow->onResized.Fire(localWindow->lastSize.x, localWindow->lastSize.y);
                     }
                     break;
                 
@@ -106,7 +111,7 @@ namespace Amendieres::Windowing
         }
 
         //get pointers and remove window from map
-        ExtWindow* localWindow = static_cast<ExtWindow*>(windowPair->second.localObj);
+        ExtWindow* const localWindow = static_cast<ExtWindow* const>(windowPair->second.localObj);
         if (localWindow->renderTexture != nullptr)
             delete localWindow->renderTexture;
         
