@@ -1,5 +1,6 @@
 -Ilibs/sfml-2.5.1/include
 -Ilibs/stb_image-2.27
+-Ilibs/freetype-2.10.0/include
 -xc++
 --std=c++17
 -DDEBUG_ALL

@@ -5,9 +5,9 @@ CFLAGS=-g -std=c++17 -DDEBUG_ALL
 #build setup
 BUILD_DIR=obj
 ASSETS_DIR=assets
-INCLUDE_DIRS=-Ilibs/sfml-2.5.1/include -Ilibs/stb_image-2.27
-LIB_DIRS=-Llibs/sfml-2.5.1/lib
-LIBS=-lsfml-graphics -lsfml-window -lsfml-system
+INCLUDE_DIRS=-Ilibs/sfml-2.5.1/include -Ilibs/stb_image-2.27 -Ilibs/freetype-2.10.0/include
+LIB_DIRS=-Llibs/sfml-2.5.1/lib -Llibs/freetype-2.10.0/objs
+LIBS=-lsfml-graphics -lsfml-window -lsfml-system -lfreetype
 TARGET=amendieres
 SRCS=main.cpp AssetManager.cpp AssetBase.cpp
 
