@@ -97,6 +97,20 @@ namespace Amendieres::Gfx
         sfTex->update(image);
     }
 
+    uint64_t SfmlRenderServer::DynamicFont_Create(DynamicFont* const inst, const uint8_t* const fontFileData, const uint64_t dataLength, const uint8_t renderSize)
+    { return 0; }
+
+    uint64_t SfmlRenderServer::DynamicFont_Create(DynamicFont* const inst, const uint8_t* const fontFileData, const uint64_t dataLength)
+    { return 0; }
+
+    void SfmlRenderServer::DynamicFont_Destroy(uint64_t itemId)
+    {}
+
+    void SfmlRenderServer::DynamicFont_RasterForSize(uint64_t itemId)
+    {}
+
+    FontGlyph* SfmlRenderServer::DynamicFont_GetGlyph(uint64_t itemId, int character)
+    { return nullptr; }
 
     uint64_t SfmlRenderServer::Text2D_Create()
     { return 0; }
