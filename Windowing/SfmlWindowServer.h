@@ -28,7 +28,7 @@ namespace Amendieres::Windowing
         Gfx::RenderTexture2D* ExtWindow_GetRenderTexture(uint64_t windowId) override;
     
     private:
-        std::unordered_map<uint64_t, Gfx::SfmlBoundObj> windows;
+        std::unordered_map<uint64_t, Gfx::RenderBoundObj> windows;
         IdManager<uint64_t> idManager;
     };
 }

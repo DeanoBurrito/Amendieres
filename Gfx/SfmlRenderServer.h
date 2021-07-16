@@ -47,9 +47,9 @@ namespace Amendieres::Gfx
         void Render(const Renderable2D& renderable) override;
         
     private:
-        std::unordered_map<uint64_t, SfmlBoundObj> textures;
-        std::unordered_map<uint64_t, SfmlBoundObj> renderTextures;
-        std::unordered_map<uint64_t, SfmlBoundObj> dynamicFonts;
+        std::unordered_map<uint64_t, RenderBoundObj> textures;
+        std::unordered_map<uint64_t, RenderBoundObj> renderTextures;
+        std::unordered_map<uint64_t, RenderBoundObj> dynamicFonts;
         
         IdManager<uint64_t> idManager;
         FT_Library freetypeLibrary;
