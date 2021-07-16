@@ -4,15 +4,12 @@
 
 namespace Amendieres::Gfx
 {
-    AssetBase* PngTexture2D::Factory(uint64_t rid)
+    AssetBase* PngTexture2D::Factory(const uint64_t rid)
     {
         return new PngTexture2D(rid);
     }
 
-    PngTexture2D::PngTexture2D(uint64_t rid) : AssetBase(rid, static_cast<int32_t>(AssetType::PngTexture))
-    {}
-
-    PngTexture2D::~PngTexture2D()
+    PngTexture2D::PngTexture2D(const uint64_t rid) : AssetBase(rid, static_cast<int32_t>(AssetType::PngTexture))
     {}
 
     bool PngTexture2D::Create(char* data, uint64_t dataCount)
@@ -47,5 +44,27 @@ namespace Amendieres::Gfx
     void PngTexture2D::Destroy()
     {
         texture.reset();
+    }
+
+    AssetBase* TrueTypeDynamicFont::Factory(const uint64_t rid)
+    {
+        return new TrueTypeDynamicFont(rid);
+    }
+
+    TrueTypeDynamicFont::TrueTypeDynamicFont(const uint64_t rid) : AssetBase(rid, static_cast<int32_t>(AssetType::TrueTypeFont))
+    {}
+
+    bool TrueTypeDynamicFont::Create(char *data, uint64_t dataCount)
+    {
+        DynamicFont* fontPtr = new DynamicFont(data, dataCount);
+        font = std::unique_ptr<DynamicFont>(fontPtr);
+        //TODO: should be checking if fontPtr is valid. Move id to base renderable class, and IsValid() can be moved there.
+
+        return true;
+    }
+
+    void TrueTypeDynamicFont::Destroy()
+    {
+        font.reset();
     }
 }

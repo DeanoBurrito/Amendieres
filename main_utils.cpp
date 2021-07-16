@@ -8,5 +8,6 @@ namespace Amendieres
     {
         AssetManager::The()->RegisterFactory("JSON", JsonAsset::Factory);
         AssetManager::The()->RegisterFactory("PNG", Gfx::PngTexture2D::Factory);
+        AssetManager::The()->RegisterFactory("TTF", Gfx::TrueTypeDynamicFont::Factory);
     }
 }

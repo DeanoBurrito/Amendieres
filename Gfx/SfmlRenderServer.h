@@ -4,6 +4,8 @@
 #include "RenderServerAPI.h"
 #include "SfmlBoundObj.h"
 #include "../IdManager.h"
+#include "ft2build.h"
+#include FT_FREETYPE_H
 
 namespace Amendieres::Gfx
 {   
@@ -50,5 +52,6 @@ namespace Amendieres::Gfx
         std::unordered_map<uint64_t, SfmlBoundObj> dynamicFonts;
         
         IdManager<uint64_t> idManager;
+        FT_Library freetypeLibrary;
     }; 
 }

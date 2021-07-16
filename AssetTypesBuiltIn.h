@@ -18,5 +18,6 @@ namespace Amendieres
 
         JsonNode = std::numeric_limits<int32_t>::min(),
         PngTexture,
+        TrueTypeFont,
     };
 }

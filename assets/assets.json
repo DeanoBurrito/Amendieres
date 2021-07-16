@@ -24,6 +24,14 @@
             {
                 "name": "engine/placeholder64x64.png"
             }
+        },
+        {
+            "name": "Debug/Font",
+            "loader": "TTF",
+            "file":
+            {
+                "name": "engine/debug/RobotoMono-Regular.tff"
+            }
         }
     ]
 }
