@@ -21,11 +21,9 @@ namespace Amendieres::Gfx
         void Texture2D_SetData(const uint64_t itemId, const uint32_t* const rgba32Data, const uint64_t dataLength) override;
         void Texture2D_SetData(const uint64_t itemId, const Colour& fillColour) override;
 
-        uint64_t DynamicFont_Create(DynamicFont* const inst, const uint8_t* const fontFileData, const uint64_t dataLength) override;
-        uint64_t DynamicFont_Create(DynamicFont* const inst, const uint8_t* const fontFileData, const uint64_t dataLength, const uint8_t renderSize) override;
+        uint64_t DynamicFont_Create(DynamicFont* const inst, const char* const fontFileData, const uint64_t dataLength) override;
+        uint64_t DynamicFont_Create(DynamicFont* const inst, const char* const fontFileData, const uint64_t dataLength, const uint8_t renderSize) override;
         void DynamicFont_Destroy(uint64_t itemId) override;
-        void DynamicFont_RasterForSize(uint64_t itemId) override;
-        FontGlyph* DynamicFont_GetGlyph(uint64_t itemId, int character) override;
 
         uint64_t Text2D_Create() override;
         uint64_t Text2D_Create(const std::string& text) override;

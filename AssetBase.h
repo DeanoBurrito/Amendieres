@@ -39,6 +39,10 @@ namespace Amendieres
     private:
         const uint64_t id;
         const int32_t type;
+
+        AssetBase(AssetBase const &) = delete;
+        AssetBase(AssetBase&&) = delete;
+        void operator=(AssetBase const &) = delete;
     };
 
     class EmptyAsset : public AssetBase
