@@ -10,11 +10,17 @@ namespace Amendieres::Gfx
     {
         LOG("SFML render server init(), marking as global instance.");
         SetInstance(this);
+
+        //init freetype
+        FT_Error lastFtError = FT_Init_FreeType(&freetypeLibrary);
+        LOG_ERROR_IF(lastFtError, "FreeType could not initialize, error code: " << lastFtError);
     }
 
     void SfmlRenderServer::Shutdown()
     {
         LOG("SFML render server shutting down.");
+
+        FT_Done_FreeType(freetypeLibrary);
     }
 
     bool SfmlRenderServer::ReloadConfig(const std::string& newConfig)
@@ -30,7 +36,7 @@ namespace Amendieres::Gfx
         }
 
         uint64_t localId = idManager.AllocId();
-        textures.try_emplace(localId, SfmlBoundObj(inst, sfTexture, SfmlBoundObjType::Texture2D));
+        textures.try_emplace(localId, RenderBoundObj(inst, sfTexture, RenderBoundObjType::Texture2D));
 
         return localId;
     }
@@ -97,11 +103,26 @@ namespace Amendieres::Gfx
         sfTex->update(image);
     }
 
-    uint64_t SfmlRenderServer::DynamicFont_Create(DynamicFont* const inst, const char* const fontFileData, const uint64_t dataLength, const uint8_t renderSize)
-    { return 0; }
-
     uint64_t SfmlRenderServer::DynamicFont_Create(DynamicFont* const inst, const char* const fontFileData, const uint64_t dataLength)
-    { return 0; }
+    { 
+        FT_Face fontFace;
+        const char* constRemovedPtr = const_cast<const char*>(fontFileData); //I wanted this to be easily searchable in the future, in case of a refactor.
+        FT_Error lastError = FT_New_Memory_Face(freetypeLibrary, reinterpret_cast<const unsigned char*>(constRemovedPtr), dataLength, 0, &fontFace);
+        if (lastError)
+        {
+            LOG_ERROR("Unable to load font face using freetype. Error: " << lastError);
+            return 0;
+        }
+        #warning implement me
+        //https://freetype.org/freetype2/docs/tutorial/step1.html
+    }
+
+    uint64_t SfmlRenderServer::DynamicFont_Create(DynamicFont* const inst, const char* const fontFileData, const uint64_t dataLength, const uint8_t renderSize)
+    {  
+        uint64_t localId = DynamicFont_Create(inst, fontFileData, dataLength);
+        #warning implement me
+        return localId;
+    }
 
     void SfmlRenderServer::DynamicFont_Destroy(uint64_t itemId)
     {}
@@ -138,7 +159,7 @@ namespace Amendieres::Gfx
         }
 
         uint64_t localId = idManager.AllocId();
-        renderTextures.try_emplace(localId, SfmlBoundObj(inst, sfRenderTexture, SfmlBoundObjType::RenderTexture2D));
+        renderTextures.try_emplace(localId, RenderBoundObj(inst, sfRenderTexture, RenderBoundObjType::RenderTexture2D));
 
         return localId;
     }
@@ -170,7 +191,7 @@ namespace Amendieres::Gfx
 
             sf::RenderWindow* sfWindow = static_cast<sf::RenderWindow*>(implHandle);
             uint64_t localId = idManager.AllocId();
-            renderTextures.try_emplace(localId, SfmlBoundObj(inst, sfWindow, SfmlBoundObjType::RenderTexture2D_Window));
+            renderTextures.try_emplace(localId, RenderBoundObj(inst, sfWindow, RenderBoundObjType::RenderTexture2D_Window));
 
             return localId;
         }
@@ -190,7 +211,7 @@ namespace Amendieres::Gfx
             return;
         }
 
-        if (boundObj->second.type == SfmlBoundObjType::RenderTexture2D)
+        if (boundObj->second.type == RenderBoundObjType::RenderTexture2D)
         {
             sf::RenderTexture* sfRenderTexture = static_cast<sf::RenderTexture*>(boundObj->second.sfObj);
             delete sfRenderTexture;
