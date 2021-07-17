@@ -8,6 +8,7 @@
 #else
     #define LOG_ERROR(x)
     #define LOG(x)
+    #define LOG_ERROR_IF(x)
 #endif
 
 #define NUMBER_BUFF_STARTING_SIZE 32
@@ -269,7 +270,9 @@ namespace Amendieres
             return;
         }
 
-        if (std::isdigit(currentChar) || (currentChar == '-' && std::isdigit(input->peek())))
+        if (std::isdigit(currentChar) 
+            || (currentChar == '-' && std::isdigit(input->peek())) 
+            || (currentChar == '+') && std::isdigit(input->peek()))
         {
             LexNumberToken();
             return;
@@ -304,6 +307,7 @@ namespace Amendieres
     {
         std::string data;
         std::getline(*input, data, '\"');
+        //TODO: This currently ignores escaped quotes, we should check the previous character. If it's a backslash, then we keep consuming input until the next set of quotes.
         
         tokens.push_back({ JsonTokenType::String, data });
     }
@@ -316,14 +320,44 @@ namespace Amendieres
 
         while (std::isdigit(input->peek()))
         {
-            currentChar = input->get();
-            numberBuff.push_back(currentChar);
+            numberBuff.push_back(input->get());
         }
 
-        //TODO: check for decimal point/E-vals here, parse floating point numbres
-        #warning Floating point numbers not implemented.
+        bool isInteger = true;
+        if (input->peek() == '.')
+        {
+            numberBuff.push_back(input->get());
+            isInteger = false;
+
+            //The JSON standard says there must be at least 1 digit following the point. 
+            //I'm not enforcing that here as atof() (which we ultimately use), dosnt require it either.
+            while (std::isdigit(input->peek()))
+            {
+                numberBuff.push_back(input->get());
+            }
+        }
+        if (input->peek() == 'e' || input->peek() == 'E')
+        {
+            numberBuff.push_back(input->get());
+            isInteger = false;
+
+            if (input->peek() == '-' || input->peek() == '+')
+                numberBuff.push_back(input->get());
+            
+            int readDigits = 0;
+            while (std::isdigit(input->peek()))
+            {
+                numberBuff.push_back(input->get());
+                readDigits++;
+            }
+
+            LOG_ERROR_IF(readDigits == 0, "JSON Parser read floating point value with exponent, but no digits following. This is not standards compliant. Parsed number so far: " << std::string(numberBuff.data(), numberBuff.size()));
+        }
 
         std::string data(numberBuff.data(), numberBuff.size());
-        tokens.push_back({ JsonTokenType::NumberInt, data });
+        if (isInteger)
+            tokens.push_back({ JsonTokenType::NumberInt, data });
+        else
+            tokens.push_back({ JsonTokenType::NumberFloat, data });
     }
 }
