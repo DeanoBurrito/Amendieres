@@ -1,6 +1,14 @@
 #environment setup
 CC=g++
 CFLAGS=-g -std=c++17 -DDEBUG_ALL
+#linux
+#REMOVE_DIR=rm -rf
+#COPY_LIBS=cp libs/sfml-2.5.1/bin/* obj
+#GUARD_OBJ_DIR=mkdir -p $@
+#windows
+REMOVE_DIR=powershell Remove-Item -Force -Recurse
+COPY_DIR=powershell Copy-Item -Path libs/sfml-2.5.1/bin/* -Destination obj -Recurse 
+GUARD_OBJ_DIR=powershell '$$dir = Split-Path $@; mkdir $$dir -Force | Out-Null'
 
 #build setup
 BUILD_DIR=obj
@@ -21,13 +29,13 @@ BIN=$(BUILD_DIR)/$(TARGET).exe
 OBJS=$(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRCS))
 include make.rules
 
-.PHONY: build run debug clean help
+.PHONY: build run debug clean
 
 build: $(OBJS)
 	@echo Linking executable ...
 	@$(CC) $(CFLAGS) $(OBJS) $(LIB_DIRS) $(LIBS) -o $(BIN)
 	@echo Copying libraries ...
-	@powershell Copy-Item -Path libs/sfml-2.5.1/bin/* -Destination obj -Recurse
+	@$(COPY_LIBS)
 	@echo Done.
 
 run: build
@@ -38,9 +46,4 @@ debug: build
 
 clean:
 	@echo Cleaning up
-	@powershell Remove-Item $(BUILD_DIR) -Force -Recurse
-
-help:
-	@echo This build system assumes the following tools are installed:
-	@echo powershell, g++ (or your chosen compiler).
-	@echo For debugging, you'll need gdb.
+	@$(REMOVE_DIR) $(BUILD_DIR)
